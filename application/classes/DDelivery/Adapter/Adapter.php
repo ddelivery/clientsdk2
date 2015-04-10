@@ -37,6 +37,7 @@ abstract class Adapter {
         $this->params = $params;
     }
 
+
     /**
      *
      * Получить апи ключ
@@ -50,6 +51,10 @@ abstract class Adapter {
     }
 
 
+    /**
+     * @return array
+     */
+    abstract  public function getProductCart();
 
     /**
      * URL до скрипта где вызывается DDelivery::render

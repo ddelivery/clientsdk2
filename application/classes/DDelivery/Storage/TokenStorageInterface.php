@@ -1,0 +1,20 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: mrozk
+ * Date: 4/10/15
+ * Time: 10:37 PM
+ */
+
+namespace DDelivery\Storage;
+
+
+interface TokenStorageInterface {
+
+    public function deleteExpired();
+
+    public function checkToken($token);
+
+    public function createToken($token, $expired);
+
+} 
