@@ -84,7 +84,6 @@ class Container {
         return $this->shared['setting'];
     }
 
-
     /**
      * Получить хранилище токенов
      *

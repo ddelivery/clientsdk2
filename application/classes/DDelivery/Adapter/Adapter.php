@@ -46,7 +46,7 @@ abstract class Adapter {
 
 
     public function getPathByDB(){
-        return '';
+        return '../db/db.sqlite';
     }
 
 
@@ -88,9 +88,11 @@ abstract class Adapter {
             if (!$dbConfig['dbPath'])
                 throw new DDeliveryException('SQLite db is empty');
             $dbDir = dirname($dbConfig['dbPath']);
+
             if ((!is_writable($dbDir)) || (!is_writable($dbConfig['dbPath'])) || (!is_dir($dbDir))) {
                 throw new DDeliveryException('SQLite database does not exist or is not writable');
             }
+
             $pdo = new \PDO('sqlite:' . $dbConfig['dbPath']);
             $pdo->exec('PRAGMA journal_mode=WAL;');
             //$pdo->errorInfo()

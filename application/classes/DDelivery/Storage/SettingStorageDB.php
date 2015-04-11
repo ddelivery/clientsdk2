@@ -9,6 +9,8 @@
 namespace DDelivery\Storage;
 
 
+use DDelivery\Adapter\Adapter;
+
 class SettingStorageDB extends DBStorage implements  SettingStorageInterface {
 
     /**
@@ -18,9 +20,21 @@ class SettingStorageDB extends DBStorage implements  SettingStorageInterface {
         return 'ddelivery_settings';
     }
 
-    public function createStorage()
-    {
-        // TODO: Implement createStorage() method.
+    public function createStorage(){
+        echo 'xxx';
+        if($this->dbType == Adapter::DB_MYSQL) {
+            $query = "CREATE TABLE `$this->tableName` (
+                            `id` int(11) NOT NULL AUTO_INCREMENT,
+                            `content` text DEFAULT NULL,
+                            PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        }elseif($this->dbType == Adapter::DB_SQLITE){
+            $query = "CREATE TABLE $this->tableName (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            content TEXT
+                      )";
+        }
+        $this->pdo->exec($query);
     }
 
     public function save($settings)
