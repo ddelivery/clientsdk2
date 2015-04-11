@@ -15,6 +15,11 @@ class Api {
 
     public $apiServer;
 
+    public function __construct($apiKey, $apiServer){
+        $this->apiKey = $apiKey;
+        $this->apiServer = $apiServer;
+    }
+
     /**
      * @param $token
      * @return array

@@ -19,6 +19,7 @@ use DDelivery\Utils;
 class Business {
 
 
+
     /**
      * Время действия токена в секундах
      */
@@ -53,6 +54,8 @@ class Business {
         $this->settingStorage = $settingStorage;
         $this->orderStorage = $orderStorage;
     }
+
+
 
     /**
      * Создать стореджи
@@ -201,5 +204,53 @@ class Business {
 
     public function setApi($api){
         $this->api = $api;
+    }
+
+    /**
+     * @param \DDelivery\Storage\OrderStorageInterface $orderStorage
+     */
+    public function setOrderStorage($orderStorage)
+    {
+        $this->orderStorage = $orderStorage;
+    }
+
+    /**
+     * @return \DDelivery\Storage\OrderStorageInterface
+     */
+    public function getOrderStorage()
+    {
+        return $this->orderStorage;
+    }
+
+    /**
+     * @param \DDelivery\Storage\SettingStorageInterface $settingStorage
+     */
+    public function setSettingStorage($settingStorage)
+    {
+        $this->settingStorage = $settingStorage;
+    }
+
+    /**
+     * @return \DDelivery\Storage\SettingStorageInterface
+     */
+    public function getSettingStorage()
+    {
+        return $this->settingStorage;
+    }
+
+    /**
+     * @param \DDelivery\Storage\TokenStorageInterface $tokenStorage
+     */
+    public function setTokenStorage($tokenStorage)
+    {
+        $this->tokenStorage = $tokenStorage;
+    }
+
+    /**
+     * @return \DDelivery\Storage\TokenStorageInterface
+     */
+    public function getTokenStorage()
+    {
+        return $this->tokenStorage;
     }
 } 

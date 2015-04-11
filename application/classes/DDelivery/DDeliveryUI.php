@@ -28,10 +28,19 @@ class DDeliveryUI {
     public $business;
 
 
+
+
     /**
      * @param $adapter
      */
-    public function setAdapter($adapter){
+    public function setAdapter(Adapter $adapter){
+        $this->adapter = $adapter;
+    }
+
+    /**
+     * @param $adapter
+     */
+    public function setBusiness(Business $adapter){
         $this->adapter = $adapter;
     }
 

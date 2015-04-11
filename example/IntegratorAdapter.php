@@ -1,0 +1,129 @@
+<?php
+use DDelivery\Adapter\Adapter;
+
+/**
+ * Created by PhpStorm.
+ * User: mrozk
+ * Date: 4/11/15
+ * Time: 2:53 PM
+ */
+
+class IntegratorAdapter extends Adapter  {
+
+    /**
+     *
+     * При синхронизации статусов заказов необходимо
+     * [
+     *      'id' => 'status',
+     *      'id2' => 'status2',
+     * ]
+     *
+     * @param array $orders
+     * @return mixed
+     */
+    public function changeStatus(array $orders)
+    {
+        // TODO: Implement changeStatus() method.
+    }
+
+    public function getCmsName()
+    {
+        // TODO: Implement getCmsName() method.
+    }
+
+    public function getCmsVersion()
+    {
+        // TODO: Implement getCmsVersion() method.
+    }
+
+    /**
+     * Получить  заказ по id
+     * ['city' => город назначения, 'payment' => тип оплаты, 'status' => статус заказа,
+     * 'sum' => сумма заказа, 'delivery' => стоимость доставки]
+     *
+     * город назначения, тип оплаты, сумма заказа, стоимость доставки
+     *
+     * @param $id
+     * @return array
+     */
+    public function getOrder($id)
+    {
+        // TODO: Implement getOrder() method.
+    }
+
+    /**
+     * Получить список заказов за период
+     * ['city' => город назначения, 'payment' => тип оплаты, 'status' => 'статус заказа'
+     * 'sum' => сумма заказа, 'delivery' => стоимость доставки]
+     *
+     * город назначения, тип оплаты, сумма заказа, стоимость доставки
+     *
+     * @param $from
+     * @param $to
+     * @return array
+     */
+    public function getOrders($from, $to)
+    {
+        // TODO: Implement getOrders() method.
+    }
+
+    /**
+     *
+     * Получить поля пользователя для отправки на серверное сдк
+     *
+     * @param $request
+     * @return array
+     */
+    public function getUserParams($request)
+    {
+        // TODO: Implement getUserParams() method.
+    }
+
+    /**
+     * @return array
+     */
+    public function getProductCart()
+    {
+        // TODO: Implement getProductCart() method.
+    }
+
+    /**
+     * URL до скрипта где вызывается DDelivery::render
+     * @return string
+     */
+    public function getPhpScriptURL()
+    {
+        // TODO: Implement getPhpScriptURL() method.
+    }
+
+    /**
+     * Получить массив с соответствием статусов DDelivery
+     * @return array
+     */
+    public function getCmsOrderStatusList()
+    {
+        // TODO: Implement getCmsOrderStatusList() method.
+    }
+
+    /**
+     * Получить массив со способами оплаты
+     * @return array
+     */
+    public function getCmsPaymentList()
+    {
+        // TODO: Implement getCmsPaymentList() method.
+    }
+
+    /***
+     *
+     * В этом участке средствами Cms проверить права доступа текущего пользователя,
+     * это важно так как на базе этого  метода происходит вход
+     * на серверние настройки
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        // TODO: Implement isAdmin() method.
+    }
+}
