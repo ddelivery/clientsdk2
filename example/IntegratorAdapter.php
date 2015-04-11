@@ -135,8 +135,7 @@ class IntegratorAdapter extends Adapter  {
      * @throws DDeliveryException
      * @return string
      */
-    public function getApiKey()
-    {
+    public function getApiKey(){
         return '852af44bafef22e96d8277f3227f0998';
         throw new DDeliveryException("переопределить");
     }
