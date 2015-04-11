@@ -1,5 +1,6 @@
 <?php
 use DDelivery\Adapter\Adapter;
+use DDelivery\DDeliveryException;
 
 /**
  * Created by PhpStorm.
@@ -125,5 +126,41 @@ class IntegratorAdapter extends Adapter  {
     public function isAdmin()
     {
         // TODO: Implement isAdmin() method.
+    }
+
+    /**
+     *
+     * Получить апи ключ
+     *
+     * @throws DDeliveryException
+     * @return string
+     */
+    public function getApiKey()
+    {
+        return '852af44bafef22e96d8277f3227f0998';
+        throw new DDeliveryException("переопределить");
+    }
+
+    public function getCustomSettingsFields(){
+        return array(
+                    array(
+                        "title" => "Имячко",
+                        "type" => self::FIELD_TYPE_TEXT,
+                        "name" => "name",
+                        //"items" => getStatusList(),
+                        "default" => 0,
+                        "data_type" => array("string"),
+                        "required" => 1
+                    ),
+                    array(
+                         "title" => "Боксик",
+                         "type" => self::FIELD_TYPE_CHECKBOX,
+                         "name" => "checker",
+                         "default" => true,
+                         "data_type" => array("int"),
+                         "required" => 1
+                    )
+        );
+
     }
 }

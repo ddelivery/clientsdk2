@@ -27,9 +27,6 @@ class DDeliveryUI {
      */
     public $business;
 
-
-
-
     /**
      * @param $adapter
      */

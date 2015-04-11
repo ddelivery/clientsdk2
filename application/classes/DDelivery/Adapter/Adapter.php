@@ -110,10 +110,7 @@ abstract class Adapter {
      * @return string
      * @throws \DDelivery\DDeliveryException
      */
-    public function getApiKey(){
-        return '852af44bafef22e96d8277f3227f0998';
-        throw new DDeliveryException("переопределить");
-    }
+    abstract  public function getApiKey();
 
 
     /**
@@ -215,7 +212,9 @@ abstract class Adapter {
      */
     abstract public function isAdmin();
 
-
+    public function getCustomSettingsFields(){
+        return array();
+    }
         /***
      *
      * Для формирование настроек на стороне серверного сдк,
@@ -224,42 +223,29 @@ abstract class Adapter {
      * @return array
      */
     function getFieldList(){
-        return array(
-            array(
-                "title" => "Способы оплаты",
-                "type" => self::FIELD_TYPE_LIST,
-                "name" => self::PARAM_PAYMENT_LIST,
-                "items" => $this->getCmsPaymentList(),
-                "default" => 0,
-                "data_type" => array("int", "string", "email"),
-                "required" => 1
-            ),
-            array(
-                "title" => "Статусы заказов",
-                "type" => self::FIELD_TYPE_LIST,
-                "name" => self::PARAM_STATUS_LIST,
-                "items" => $this->getCmsOrderStatusList(),
-                "default" => 0,
-                "data_type" => array("int", "string", "email"),
-                "required" => 1
-            ),
-            array(
-                "title" => "Имячко",
-                "type" => self::FIELD_TYPE_TEXT,
-                "name" => "name",
-                //"items" => getStatusList(),
-                "default" => 0,
-                "data_type" => array("string"),
-                "required" => 1
-            ),
-            array(
-                "title" => "Боксик",
-                "type" => self::FIELD_TYPE_CHECKBOX,
-                "name" => "checker",
-                "default" => true,
-                "data_type" => array("int"),
-                "required" => 1
-            ),
+
+        $userFields = $this->getCustomSettingsFields();
+        $requiredFields = array(
+                            array(
+                                "title" => "Способы оплаты",
+                                "type" => self::FIELD_TYPE_LIST,
+                                "name" => self::PARAM_PAYMENT_LIST,
+                                "items" => $this->getCmsPaymentList(),
+                                "default" => 0,
+                                "data_type" => array("int", "string", "email"),
+                                "required" => 1
+                            ),
+                            array(
+                                "title" => "Статусы заказов",
+                                "type" => self::FIELD_TYPE_LIST,
+                                "name" => self::PARAM_STATUS_LIST,
+                                "items" => $this->getCmsOrderStatusList(),
+                                "default" => 0,
+                                "data_type" => array("int", "string", "email"),
+                                "required" => 1
+                            )
         );
+
+        return array_merge($userFields, $requiredFields);
     }
 } 

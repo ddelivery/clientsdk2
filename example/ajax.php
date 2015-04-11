@@ -6,9 +6,11 @@
  * Time: 11:06 PM
  */
 use DDelivery\Adapter\Container;
-use DDelivery\DDeliveryUI;
+
+error_reporting(E_ALL);
 
 require(implode(DIRECTORY_SEPARATOR, array(__DIR__,'application','bootstrap.php')));
+
 require('IntegratorAdapter.php');
 //echo implode(DIRECTORY_SEPARATOR, array(__DIR__,'application','bootstrap.php'));
 $adapter = new IntegratorAdapter();
