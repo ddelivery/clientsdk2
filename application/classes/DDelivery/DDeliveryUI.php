@@ -35,10 +35,10 @@ class DDeliveryUI {
     }
 
     /**
-     * @param $adapter
+     * @param Business $business
      */
-    public function setBusiness(Business $adapter){
-        $this->adapter = $adapter;
+    public function setBusiness(Business $business){
+        $this->business = $business;
     }
 
     public function actionDefault(){
@@ -71,11 +71,21 @@ class DDeliveryUI {
     }
 
 
-
+    /**
+     * Получить список полей настроек
+     *
+     * @return array
+     */
     public function actionFields(){
         return $this->adapter->getFieldList();
     }
 
+    /**
+     * Сохранить настройки
+     *
+     * @return int
+     * @throws DDeliveryException
+     */
     public function actionSave(){
         if(!empty($this->request['cms'])){
             $result = $this->business->saveSettings($this->request['cms']);
@@ -85,6 +95,10 @@ class DDeliveryUI {
         throw new DDeliveryException("Ошибка сохранения настроек");
     }
 
+
+    /**
+     * Обработка пуша статусов
+     */
     public function actionPush(){
         if(!empty($this->request['orders'])){
 
@@ -110,7 +124,7 @@ class DDeliveryUI {
             $token = $this->business->renderAdmin();
             if($token){
                 $url = $this->adapter->getSdkServer() . 'passport/' .
-                                $this->adapter->getApiKey() . '/auth.json?token=' . $token;
+                                $this->adapter->getApiKey() . '/admin.json?token=' . $token;
                 $this->setRedirect($url);
             }
         }
@@ -151,6 +165,9 @@ class DDeliveryUI {
         }catch (\Exception $e){
             $success = 0;
             $data = $e->getMessage();
+            $data = array(['error' => $data]);
+            echo $e->getMessage();
+            return;
         }
         $this->postRender();
         echo  json_encode(array( 'success' => $success, 'data' => $data ));

@@ -152,9 +152,10 @@ class Business {
      */
     public function renderAdmin(){
         $token = $this->generateToken();
+
         $result = $this->api->accessAdmin($token);
         if( $result['success'] == 1 ){
-            return $result['data']['token'];
+            return $result['token'];
         }
         return null;
     }

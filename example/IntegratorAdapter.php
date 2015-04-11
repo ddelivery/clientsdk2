@@ -27,6 +27,15 @@ class IntegratorAdapter extends Adapter  {
         // TODO: Implement changeStatus() method.
     }
 
+    /**
+     * Получить урл апи сервера
+     *
+     * @return string
+     */
+    public function getSdkServer(){
+        return self::SDK_SERVER_DEV_SDK;
+    }
+
     public function getCmsName()
     {
         // TODO: Implement getCmsName() method.
@@ -123,9 +132,8 @@ class IntegratorAdapter extends Adapter  {
      *
      * @return bool
      */
-    public function isAdmin()
-    {
-        // TODO: Implement isAdmin() method.
+    public function isAdmin(){
+        return false;
     }
 
     /**

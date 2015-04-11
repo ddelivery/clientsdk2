@@ -15,7 +15,7 @@ class Utils {
 
     public static function generateToken(){
         $rand = rand( -1000, 1000 );
-        $token = md5( self::getUserHost() . $rand ) . md5( time() + $rand );
+        $token = md5( self::getUserHost() . $rand . time() );
         return $token;
     }
 

@@ -28,7 +28,7 @@ class CurlProvider {
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($params));
         $result = curl_exec($curl);
         curl_close($curl);
-        return $result;
+        return json_decode( $result, true );
     }
 
 
@@ -39,16 +39,17 @@ class CurlProvider {
         curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($params));
         $result = curl_exec($curl);
         curl_close($curl);
-        return $result;
+        return json_decode( $result, true );
     }
 
 
     public static function processGet($url, $params){
         $curl = self::getCurl();
         $url = $url . '?' .http_build_query($params);
-        curl_setopt($curl, CURLOPT_URL, $url . '?'  );
+        curl_setopt($curl, CURLOPT_URL, $url  );
         $result = curl_exec($curl);
+        print_r($result);
         curl_close($curl);
-        return $result;
+        return json_decode( $result, true );
     }
 }
