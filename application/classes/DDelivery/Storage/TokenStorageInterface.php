@@ -11,10 +11,11 @@ namespace DDelivery\Storage;
 
 interface TokenStorageInterface {
 
+    public function createStorage();
+
     public function deleteExpired();
 
     public function checkToken($token);
 
     public function createToken($token, $expired);
-
-} 
+}

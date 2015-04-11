@@ -9,6 +9,7 @@
 namespace DDelivery;
 
 
+use DateTime;
 use DDelivery\Adapter\Adapter;
 use DDelivery\Business\Business;
 
@@ -38,22 +39,50 @@ class DDeliveryUI {
         return 1;
     }
 
-
-
-    public function actionOrders(){
-
+    function validateDate($date, $format = 'Y.m.d'){
+        $d = DateTime::createFromFormat($format, $date);
+        return $d && $d->format($format) == $date;
     }
 
-    public function actionFields(){
 
+    public function actionOrder(){
+        if( !empty( $this->request['order_id']) ){
+            $order = $this->adapter->getOrder($this->request['order_id']);
+            return $order;
+        }
+        throw new DDeliveryException("Ошибка получения заказа");
+    }
+
+    public function actionOrders(){
+        if( $this->validateDate( $this->request['from'] ) &&
+                $this->validateDate( $this->request['to'])){
+            $orders = $this->adapter->getOrders($this->request['from'], $this->request['to']);
+            if( count($orders) ){
+                return $orders;
+            }
+        }
+        throw new DDeliveryException("Ошибка получения списка заказов");
+    }
+
+
+
+    public function actionFields(){
+        return $this->adapter->getFieldList();
     }
 
     public function actionSave(){
-
+        if(!empty($this->request['cms'])){
+            $result = $this->business->saveSettings($this->request['cms']);
+            if($result)
+                return 1;
+        }
+        throw new DDeliveryException("Ошибка сохранения настроек");
     }
 
     public function actionPush(){
+        if(!empty($this->request['orders'])){
 
+        }
     }
 
 
@@ -61,8 +90,9 @@ class DDeliveryUI {
         $cart = $this->adapter->getProductCart();
         $token = $this->business->renderModuleToken($cart);
         if($token){
-            $url = $this->adapter->getSdkServer() . 'passport/' . $token . '/shop.json';
-            $this->setRedirect($url);
+            $url = $this->adapter->getSdkServer() . 'ui/' . $token . '/module.json';
+            $params = http_build_query($this->adapter->getUserParams($this->request));
+            $this->setRedirect($url . '?' . $params);
         }
         throw new DDeliveryException("Ошибка входа в магазин");
     }
@@ -120,20 +150,29 @@ class DDeliveryUI {
         echo  json_encode(array( 'success' => $success, 'data' => $data ));
     }
 
-
+    /**
+     * Проверка существования токена для совершения
+     * закритого метода
+     *
+     * @return bool
+     */
     public function checkToken(){
         if(isset($this->request['api_key']) && isset($this->request['token'])){
-            if($this->business->checkToken($this->request['token']))
+            if($this->business->checkToken($this->request['token'])
+                        && $this->request['api_key'] == $this->adapter->getApiKey())
                 return true;
         }
         return false;
     }
 
     /**
+     *
+     * Методи которие доступни по токену
+     *
      * @return array
      */
     public function getTokenMethod(){
-        return [];
+        return ['orders', 'push', 'fields', 'save', 'order'];
     }
 
     public function preRender(){

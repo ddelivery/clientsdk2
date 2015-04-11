@@ -9,6 +9,11 @@
 namespace DDelivery\Storage;
 
 
-class OrderStorageInterface {
+interface OrderStorageInterface {
 
+    public function createStorage();
+
+    public function saveOrder($sdkId, $cmsId, $payment, $status, $ddeliveryId = 0, $id = 0 );
+
+    public function getOrder($cmsId);
 } 

@@ -31,12 +31,77 @@ abstract class Adapter {
 
     const FIELD_TYPE_CHECKBOX = 'checkbox';
 
+    const PARAM_PAYMENT_LIST = 'payment_list';
 
+    const PARAM_STATUS_LIST = 'status_list';
+
+    const DB_MYSQL           = 1;
+
+    const DB_SQLITE          = 2;
 
     public function __construct($params = []){
         $this->params = $params;
     }
 
+
+
+    public function getPathByDB(){
+        return '';
+    }
+
+
+    /**
+     * Настройки базы данных
+     * @return array
+     */
+    public function getDbConfig(){
+        return array(
+            'type' => self::DB_SQLITE,
+            'dbPath' => $this->getPathByDB(),
+            'prefix' => '',
+        );
+        return array(
+            'pdo' => new \PDO('mysql:host=localhost;dbname=ddelivery', 'root', '0', array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")),
+            'prefix' => '',
+        );
+        return array(
+            'type' => self::DB_MYSQL,
+            'dsn' => 'mysql:host=localhost;dbname=ddelivery',
+            'user' => 'root',
+            'pass' => '0',
+            'prefix' => '',
+        );
+    }
+
+    /**
+     *
+     * Получить объект PDO
+     *
+     * @return \PDO
+     * @throws DDeliveryException
+     */
+    public function getDb(){
+        $dbConfig = $this->getDbConfig();
+        if (isset($dbConfig['pdo']) && ($dbConfig['pdo'] instanceof \PDO || $dbConfig['pdo'] instanceof ConnectInterface)) {
+            $pdo = $dbConfig['pdo'];
+        } elseif ($dbConfig['type'] == self::DB_SQLITE) {
+            if (!$dbConfig['dbPath'])
+                throw new DDeliveryException('SQLite db is empty');
+            $dbDir = dirname($dbConfig['dbPath']);
+            if ((!is_writable($dbDir)) || (!is_writable($dbConfig['dbPath'])) || (!is_dir($dbDir))) {
+                throw new DDeliveryException('SQLite database does not exist or is not writable');
+            }
+            $pdo = new \PDO('sqlite:' . $dbConfig['dbPath']);
+            $pdo->exec('PRAGMA journal_mode=WAL;');
+            //$pdo->errorInfo()
+        } elseif ($dbConfig['type'] == self::DB_MYSQL) {
+            $pdo = new \PDO($dbConfig['dsn'], $dbConfig['user'], $dbConfig['pass']);
+            $pdo->exec('SET NAMES utf8');
+        } else {
+            throw new DDeliveryException('Not support database type');
+        }
+        return $pdo;
+    }
 
     /**
      *
@@ -49,6 +114,61 @@ abstract class Adapter {
         return '852af44bafef22e96d8277f3227f0998';
         throw new DDeliveryException("переопределить");
     }
+
+
+    /**
+     *
+     * При синхронизации статусов заказов необходимо
+     * [
+     *      'id' => 'status',
+     *      'id2' => 'status2',
+     * ]
+     *
+     * @param array $orders
+     * @return mixed
+     */
+    abstract  public function changeStatus(array $orders);
+
+    abstract  public function getCmsName();
+
+    abstract  public function getCmsVersion();
+
+
+    /**
+     * Получить  заказ по id
+     * ['city' => город назначения, 'payment' => тип оплаты, 'status' => статус заказа,
+     * 'sum' => сумма заказа, 'delivery' => стоимость доставки]
+     *
+     * город назначения, тип оплаты, сумма заказа, стоимость доставки
+     *
+     * @param $id
+     * @return array
+     */
+    abstract  public function getOrder( $id );
+
+
+    /**
+     * Получить список заказов за период
+     * ['city' => город назначения, 'payment' => тип оплаты, 'status' => 'статус заказа'
+     * 'sum' => сумма заказа, 'delivery' => стоимость доставки]
+     *
+     * город назначения, тип оплаты, сумма заказа, стоимость доставки
+     *
+     * @param $from
+     * @param $to
+     * @return array
+     */
+    abstract  public function getOrders( $from, $to );
+
+
+    /**
+     *
+     * Получить поля пользователя для отправки на серверное сдк
+     *
+     * @param $request
+     * @return array
+     */
+    abstract  public function getUserParams( $request );
 
 
     /**
@@ -108,7 +228,7 @@ abstract class Adapter {
             array(
                 "title" => "Способы оплаты",
                 "type" => self::FIELD_TYPE_LIST,
-                "name" => "payment_list",
+                "name" => self::PARAM_PAYMENT_LIST,
                 "items" => $this->getCmsPaymentList(),
                 "default" => 0,
                 "data_type" => array("int", "string", "email"),
@@ -117,7 +237,7 @@ abstract class Adapter {
             array(
                 "title" => "Статусы заказов",
                 "type" => self::FIELD_TYPE_LIST,
-                "name" => "status_list",
+                "name" => self::PARAM_STATUS_LIST,
                 "items" => $this->getCmsOrderStatusList(),
                 "default" => 0,
                 "data_type" => array("int", "string", "email"),

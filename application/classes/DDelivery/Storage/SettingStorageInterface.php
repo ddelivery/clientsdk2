@@ -9,6 +9,11 @@
 namespace DDelivery\Storage;
 
 
-class SettingStorageInterface {
+interface SettingStorageInterface {
 
+    public function createStorage();
+
+    public function save($settings);
+
+    public function getParam($paramName);
 } 
