@@ -154,7 +154,10 @@ class Business {
         $token = $this->generateToken();
 
         $result = $this->api->accessAdmin($token);
-        if( $result['success'] == 1 ){
+        echo '<pre>';
+        print_r($result);
+        echo '</pre>';
+        if( isset($result['success']) && ($result['success'] == 1) ){
             return $result['token'];
         }
         return null;

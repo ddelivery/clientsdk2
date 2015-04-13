@@ -8,11 +8,13 @@
 
 namespace DDelivery\Server;
 
+use DDelivery\Utils;
 
 class CurlProvider {
 
     public static function getCurl(){
         $curl = curl_init();
+        curl_setopt($curl, CURLOPT_REFERER, Utils::fullUrl($_SERVER, false));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($curl, CURLOPT_HEADER, 0);
         return $curl;
@@ -43,12 +45,14 @@ class CurlProvider {
     }
 
 
+
     public static function processGet($url, $params){
+
         $curl = self::getCurl();
         $url = $url . '?' .http_build_query($params);
         curl_setopt($curl, CURLOPT_URL, $url  );
         $result = curl_exec($curl);
-        print_r($result);
+
         curl_close($curl);
         return json_decode( $result, true );
     }

@@ -133,7 +133,7 @@ class IntegratorAdapter extends Adapter  {
      * @return bool
      */
     public function isAdmin(){
-        return false;
+        return true;
     }
 
     /**

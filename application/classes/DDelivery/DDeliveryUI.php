@@ -122,11 +122,15 @@ class DDeliveryUI {
     public function actionAdmin(){
         if( $this->adapter->isAdmin() ){
             $token = $this->business->renderAdmin();
+
             if($token){
                 $url = $this->adapter->getSdkServer() . 'passport/' .
                                 $this->adapter->getApiKey() . '/admin.json?token=' . $token;
                 $this->setRedirect($url);
             }
+        }else{
+            throw new DDeliveryException("Для входа в админ панель
+                                            необходимо быть администратором CMS");
         }
         throw new DDeliveryException("Ошибка входа в админ панель");
     }
