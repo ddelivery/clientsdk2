@@ -22,8 +22,7 @@ class IntegratorAdapter extends Adapter  {
      * @param array $orders
      * @return mixed
      */
-    public function changeStatus(array $orders)
-    {
+    public function changeStatus(array $orders){
         // TODO: Implement changeStatus() method.
     }
 
@@ -125,17 +124,17 @@ class IntegratorAdapter extends Adapter  {
      */
     public function getProductCart(){
         return array(
-            array(
-                "id"=>12,
-                "name"=>"Веселый клоун",
-                "width"=>10,
-                "height"=>10,
-                "length"=>10,
-                "weight"=>1,
-                "price"=>1110,
-                "quantity"=>2,
-                "sku"=>"app2"
-            )
+                    array(
+                        "id"=>12,
+                        "name"=>"Веселый клоун",
+                        "width"=>10,
+                        "height"=>10,
+                        "length"=>10,
+                        "weight"=>1,
+                        "price"=>1110,
+                        "quantity"=>2,
+                        "sku"=>"app2"
+                    )
         );
     }
 
