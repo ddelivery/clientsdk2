@@ -36,13 +36,11 @@ class IntegratorAdapter extends Adapter  {
         return self::SDK_SERVER_DEV_SDK;
     }
 
-    public function getCmsName()
-    {
+    public function getCmsName(){
         // TODO: Implement getCmsName() method.
     }
 
-    public function getCmsVersion()
-    {
+    public function getCmsVersion(){
         // TODO: Implement getCmsVersion() method.
     }
 
@@ -56,9 +54,14 @@ class IntegratorAdapter extends Adapter  {
      * @param $id
      * @return array
      */
-    public function getOrder($id)
-    {
-        // TODO: Implement getOrder() method.
+    public function getOrder($id){
+        return array(
+            'city' => 'Урюпинск',
+            'payment' => 22,
+            'status' => 'Статус',
+            'sum' => 2200,
+            'delivery' => 220,
+        );
     }
 
     /**
@@ -72,9 +75,30 @@ class IntegratorAdapter extends Adapter  {
      * @param $to
      * @return array
      */
-    public function getOrders($from, $to)
-    {
-        // TODO: Implement getOrders() method.
+    public function getOrders($from, $to){
+        return array(
+                array(
+                    'city' => 'Урюпинск',
+                    'payment' => 22,
+                    'status' => 'Статус',
+                    'sum' => 2200,
+                    'delivery' => 220,
+                ),
+                array(
+                    'city' => 'г. Москва, Московская область',
+                    'payment' => 'Пример оплаты',
+                    'status' => 'Статус 222',
+                    'sum' => 2100,
+                    'delivery' => 120,
+                ),
+                array(
+                    'city' => 'Сити Питер',
+                    'payment' => 'Пример оплаты 2',
+                    'status' => 33,
+                    'sum' => 2100,
+                    'delivery' => 120,
+                )
+        );
     }
 
     /**
@@ -149,7 +173,7 @@ class IntegratorAdapter extends Adapter  {
     public function getCustomSettingsFields(){
         return array(
                     array(
-                        "title" => "Имячко",
+                        "title" => "Название (Пример кастомного поля)",
                         "type" => self::FIELD_TYPE_TEXT,
                         "name" => "name",
                         //"items" => getStatusList(),
@@ -158,7 +182,7 @@ class IntegratorAdapter extends Adapter  {
                         "required" => 1
                     ),
                     array(
-                         "title" => "Боксик",
+                         "title" => "Выводить способ доставки(Пример кастомного поля)",
                          "type" => self::FIELD_TYPE_CHECKBOX,
                          "name" => "checker",
                          "default" => true,

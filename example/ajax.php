@@ -16,7 +16,7 @@ try{
     //echo implode(DIRECTORY_SEPARATOR, array(__DIR__,'application','bootstrap.php'));
     $adapter = new IntegratorAdapter();
     $container = new Container(array('adapter' => $adapter));
-    $container->getUi()->render($_GET);
+    $container->getUi()->render($_REQUEST);
 }catch ( \Exception $e){
     echo $e->getMessage();
     echo '<pre>';

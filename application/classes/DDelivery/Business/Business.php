@@ -87,6 +87,23 @@ class Business {
         return false;
     }
 
+
+    /**
+     *
+     * Получить заказ по Id
+     *
+     * @param $sdkId
+     * @return array
+     */
+    public function getOrder($sdkId){
+        $order = $this->orderStorage->getOrderBySdkId((int)$sdkId);
+        if( count( $order )){
+            return $order;
+        }
+        return [];
+    }
+
+
     /**
      * Визивается при смене статуса заказа,
      * если статус заказа соответствует статусу указанному в настройках

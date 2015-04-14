@@ -51,12 +51,28 @@ class DDeliveryUI {
     }
 
 
+
     public function actionOrder(){
-        if( !empty( $this->request['order_id']) ){
-            $order = $this->adapter->getOrder($this->request['order_id']);
+        if( !empty( $this->request['id']) ){
+            $order = $this->adapter->getOrder($this->request['id']);
             return $order;
         }
         throw new DDeliveryException("Ошибка получения заказа");
+    }
+
+
+    /**
+     * Получить информацию о заказе по cmsId
+     *
+     * @return array
+     * @throws DDeliveryException
+     */
+    public function actionSync(){
+        if( !empty( $this->request['id']) ){
+            $order = $this->business->getOrder($this->request['id']);
+            return $order;
+        }
+        throw new DDeliveryException("Заказ DDelivery не найден");
     }
 
     public function actionOrders(){
@@ -66,6 +82,7 @@ class DDeliveryUI {
             if( count($orders) ){
                 return $orders;
             }
+            return [];
         }
         throw new DDeliveryException("Ошибка получения списка заказов");
     }
@@ -100,9 +117,10 @@ class DDeliveryUI {
      * Обработка пуша статусов
      */
     public function actionPush(){
-        if(!empty($this->request['orders'])){
-
+        if(!empty($this->request['status'])){
+            return $this->adapter->changeStatus($this->request['status']);
         }
+        return 1;
     }
 
 
@@ -173,8 +191,8 @@ class DDeliveryUI {
             $success = 0;
             $data = $e->getMessage();
             $data = array(['error' => $data]);
-            echo $e->getMessage();
-            return;
+            // echo $e->getMessage();
+            //return;
         }
         $this->postRender();
         echo  json_encode(array( 'success' => $success, 'data' => $data ));
@@ -202,7 +220,7 @@ class DDeliveryUI {
      * @return array
      */
     public function getTokenMethod(){
-        return ['orders', 'push', 'fields', 'save', 'order'];
+        return ['orders', 'push', 'fields', 'save', 'order', 'sync'];
     }
 
     public function preRender(){

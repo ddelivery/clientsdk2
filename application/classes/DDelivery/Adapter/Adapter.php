@@ -124,7 +124,7 @@ abstract class Adapter {
      * ]
      *
      * @param array $orders
-     * @return mixed
+     * @return bool
      */
     abstract  public function changeStatus(array $orders);
 

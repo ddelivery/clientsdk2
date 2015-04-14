@@ -16,4 +16,6 @@ interface OrderStorageInterface {
     public function saveOrder($sdkId, $cmsId, $payment, $status, $ddeliveryId = 0, $id = 0 );
 
     public function getOrder($cmsId);
+
+    public function getOrderBySdkId($sdkId);
 } 

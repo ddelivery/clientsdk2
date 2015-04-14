@@ -108,7 +108,6 @@ class OrderStorageDB extends DBStorage implements OrderStorageInterface {
         $query = 'SELECT * FROM ' . $this->tableName . ' WHERE cms_id = :cms_id';
         $sth = $this->pdo->prepare( $query );
         $sth->bindParam( ':cms_id', $cmsId );
-        $sth = $this->pdo->prepare( $query );
         $sth->execute();
         $result = $sth->fetchAll(\PDO::FETCH_OBJ);
         if( count($result) > 0 ){
@@ -122,5 +121,18 @@ class OrderStorageDB extends DBStorage implements OrderStorageInterface {
      */
     public function  getTableName(){
         return 'ddelivery_orders';
+    }
+
+    public function getOrderBySdkId($sdkId){
+        $query = 'SELECT * FROM ' . $this->tableName . ' WHERE sdk_id =:sdk_id';
+        $sth = $this->pdo->prepare( $query );
+        
+        $sth->bindParam( ':sdk_id', $sdkId );
+        $sth->execute();
+        $result = $sth->fetchAll(\PDO::FETCH_OBJ);
+        if( count($result) > 0 ){
+            return $result[0];
+        }
+        return null;
     }
 }
