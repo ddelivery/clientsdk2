@@ -113,22 +113,32 @@ class IntegratorAdapter extends Adapter  {
         // TODO: Implement getUserParams() method.
     }
 
-    /**
-     * @return array
-     */
-    public function getProductCart()
-    {
-        // TODO: Implement getProductCart() method.
+    public function getDiscount(){
+        return 0;
     }
 
     /**
-     * URL до скрипта где вызывается DDelivery::render
-     * @return string
+     *
+     * Получить содержимое корзини
+     *
+     * @return array
      */
-    public function getPhpScriptURL()
-    {
-        // TODO: Implement getPhpScriptURL() method.
+    public function getProductCart(){
+        return array(
+            array(
+                "id"=>12,
+                "name"=>"Веселый клоун",
+                "width"=>10,
+                "height"=>10,
+                "length"=>10,
+                "weight"=>1,
+                "price"=>1110,
+                "quantity"=>2,
+                "sku"=>"app2"
+            )
+        );
     }
+
 
     /**
      * Получить массив с соответствием статусов DDelivery

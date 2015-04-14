@@ -80,7 +80,7 @@ class Business {
         $id = $this->orderStorage->saveOrder($sdkId, $cmsId, $payment, $status);
         if( !empty($id)  ){
             $result = $this->api->editOrder($sdkId, $cmsId, $payment, $status);
-            if( $result['success'] == 1 ){
+            if( isset($result['success']) && $result['success'] == 1 ){
                 return true;
             }
         }
@@ -126,8 +126,8 @@ class Business {
                 $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status, $payment_price);
                 if( isset($result['success']) && $result['success'] == 1 ){
                     $ddelivery_id = $result['data']['ddelivery_id'];
-                    $order = $this->orderStorage->saveOrder($sdkId, $cmsId, $payment, $status,
-                                                    $ddelivery_id, $order['id']);
+                    $this->orderStorage->saveOrder($sdkId, $cmsId, $payment, $status,
+                                                                $ddelivery_id, $order['id']);
                     return $ddelivery_id;
                 }
             }
@@ -143,7 +143,7 @@ class Business {
      */
     public function checkHandshakeToken($token){
         $result = $this->api->checkHandshakeToken($token);
-        if( $result['success'] == 1 ){
+        if( isset($result['success']) && $result['success'] == 1 ){
             return true;
         }
         return false;
@@ -186,8 +186,8 @@ class Business {
      */
     public function renderModuleToken($cart){
         $result = $this->api->pushCart($cart);
-        if( $result['success'] == 1 ){
-            return $result['data']['token'];
+        if( isset($result['success']) && $result['success'] == 1 ){
+            return $result['token'];
         }
         return null;
     }

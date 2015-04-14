@@ -171,15 +171,35 @@ abstract class Adapter {
 
 
     /**
+     *
+     * Получить скидку
+     *
+     * @return float
+     */
+    abstract  public function getDiscount();
+
+    /**
+     *
+     *
+     *
      * @return array
      */
     abstract  public function getProductCart();
 
     /**
-     * URL до скрипта где вызывается DDelivery::render
-     * @return string
+     *
+     * Получить корзину и скидку
+     *
+     * @return array
      */
-    public abstract function getPhpScriptURL();
+    public function getCartAndDiscount(){
+        $cart = array(
+            "products" => $this->getProductCart(),
+            "discount"=>$this->getDiscount()
+        );
+        return $cart;
+    }
+
 
     /**
      * Получить урл апи сервера

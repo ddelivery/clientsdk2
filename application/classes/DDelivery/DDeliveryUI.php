@@ -45,13 +45,28 @@ class DDeliveryUI {
         return 1;
     }
 
+
+    /**
+     *
+     * Валидация дати
+     *
+     * @param $date
+     * @param string $format
+     * @return bool
+     */
     function validateDate($date, $format = 'Y.m.d'){
         $d = DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) == $date;
     }
 
 
-
+    /**
+     *
+     * Получить заказ по ID
+     *
+     * @return array
+     * @throws DDeliveryException
+     */
     public function actionOrder(){
         if( !empty( $this->request['id']) ){
             $order = $this->adapter->getOrder($this->request['id']);
@@ -75,6 +90,14 @@ class DDeliveryUI {
         throw new DDeliveryException("Заказ DDelivery не найден");
     }
 
+
+    /**
+     *
+     * Получить список заказов
+     *
+     * @return array
+     * @throws DDeliveryException
+     */
     public function actionOrders(){
         if( $this->validateDate( $this->request['from'] ) &&
                 $this->validateDate( $this->request['to'])){
@@ -124,19 +147,32 @@ class DDeliveryUI {
     }
 
 
+
+    /**
+     *
+     * Перейти к форме оформления заказа
+     *
+     * @throws DDeliveryException
+     */
     public function actionShop(){
-        $cart = $this->adapter->getProductCart();
+        $cart = $this->adapter->getCartAndDiscount();
         $token = $this->business->renderModuleToken($cart);
         if($token){
             $url = $this->adapter->getSdkServer() . 'ui/' . $token . '/module.json';
             $params = http_build_query($this->adapter->getUserParams($this->request));
-            $this->setRedirect($url . '?' . $params);
+            $url .= (empty($params))?'':'?' . $params;
+            $this->setRedirect($url);
         }
         throw new DDeliveryException("Ошибка входа в магазин");
     }
 
 
-
+    /**
+     *
+     * Переход в админку СДК
+     *
+     * @throws DDeliveryException
+     */
     public function actionAdmin(){
         if( $this->adapter->isAdmin() ){
             $token = $this->business->renderAdmin();
@@ -153,6 +189,13 @@ class DDeliveryUI {
         throw new DDeliveryException("Ошибка входа в админ панель");
     }
 
+    /**
+     *
+     * Сгенерировать токен для виполнения операций
+     *
+     * @return array
+     * @throws DDeliveryException
+     */
     public function actionHandshake(){
         if(isset($this->request['api_key']) && isset($this->request['token'])){
             if($this->request['api_key'] == $this->adapter->getApiKey()){
@@ -191,7 +234,7 @@ class DDeliveryUI {
             $success = 0;
             $data = $e->getMessage();
             $data = array(['error' => $data]);
-            // echo $e->getMessage();
+            echo $e->getMessage();
             //return;
         }
         $this->postRender();
