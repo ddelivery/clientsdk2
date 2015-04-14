@@ -11,6 +11,9 @@ namespace DDelivery\Storage;
 
 abstract class DBStorage {
 
+    /**
+     * @var \PDO
+     */
     public $pdo;
 
     public $dbType;

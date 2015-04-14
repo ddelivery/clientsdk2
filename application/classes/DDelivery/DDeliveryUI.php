@@ -139,7 +139,10 @@ class DDeliveryUI {
         if(isset($this->request['api_key']) && isset($this->request['token'])){
             if($this->request['api_key'] == $this->adapter->getApiKey()){
                 if( $this->business->checkHandshakeToken($this->request['token'])){
-                    return array('token' => $this->business->generateToken());
+                    $token = $this->business->generateToken();
+                    if(!empty($token)){
+                        return array('token' => $token);
+                    }
                 }
             }
         }

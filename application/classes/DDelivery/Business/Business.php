@@ -23,7 +23,7 @@ class Business {
     /**
      * Время действия токена в секундах
      */
-    const TOKEN_LIFE_TIME = 60;
+    const TOKEN_LIFE_TIME = 1;
 
     /**
      * @var Api
@@ -154,9 +154,6 @@ class Business {
         $token = $this->generateToken();
 
         $result = $this->api->accessAdmin($token);
-        echo '<pre>';
-        print_r($result);
-        echo '</pre>';
         if( isset($result['success']) && ($result['success'] == 1) ){
             return $result['token'];
         }
@@ -187,8 +184,10 @@ class Business {
      */
     public function generateToken(){
         $token = Utils::generateToken();
-        $this->tokenStorage->createToken($token, self::TOKEN_LIFE_TIME);
-        return $token;
+        if( $this->tokenStorage->createToken($token, self::TOKEN_LIFE_TIME) ){
+            return $token;
+        }
+        return null;
     }
 
     /**

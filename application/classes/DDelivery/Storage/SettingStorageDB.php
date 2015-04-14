@@ -21,7 +21,6 @@ class SettingStorageDB extends DBStorage implements  SettingStorageInterface {
     }
 
     public function createStorage(){
-        echo 'xxx';
         if($this->dbType == Adapter::DB_MYSQL) {
             $query = "CREATE TABLE `$this->tableName` (
                             `id` int(11) NOT NULL AUTO_INCREMENT,

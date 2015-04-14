@@ -18,4 +18,11 @@ interface TokenStorageInterface {
     public function checkToken($token);
 
     public function createToken($token, $expired);
+
+    /**
+     * Выбрать все записи
+     *
+     * @return array
+     */
+    public function getAll();
 }
