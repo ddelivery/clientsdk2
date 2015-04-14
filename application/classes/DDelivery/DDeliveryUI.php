@@ -146,7 +146,7 @@ class DDeliveryUI {
                 }
             }
         }
-        throw new DDeliveryException("Ошибка инициализации токена");
+        throw new DDeliveryException("Ошибка рукопожатия");
     }
 
     public function render(array $request){

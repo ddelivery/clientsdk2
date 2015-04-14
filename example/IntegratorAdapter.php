@@ -110,18 +110,16 @@ class IntegratorAdapter extends Adapter  {
      * Получить массив с соответствием статусов DDelivery
      * @return array
      */
-    public function getCmsOrderStatusList()
-    {
-        // TODO: Implement getCmsOrderStatusList() method.
+    public function getCmsOrderStatusList(){
+        return array('10' => 'Завершен', '11' => 'Куплен');
     }
 
     /**
      * Получить массив со способами оплаты
      * @return array
      */
-    public function getCmsPaymentList()
-    {
-        // TODO: Implement getCmsPaymentList() method.
+    public function getCmsPaymentList(){
+        return array('14' => 'Наличными', '17' => 'Карточкой');
     }
 
     /***

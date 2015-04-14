@@ -23,7 +23,7 @@ class Business {
     /**
      * Время действия токена в секундах
      */
-    const TOKEN_LIFE_TIME = 1;
+    const TOKEN_LIFE_TIME = 20;
 
     /**
      * @var Api

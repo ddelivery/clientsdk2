@@ -229,7 +229,7 @@ abstract class Adapter {
         $userFields = $this->getCustomSettingsFields();
         $requiredFields = array(
                             array(
-                                "title" => "Способы оплаты",
+                                "title" => "Способы оплаты, который соответствует наложенному платежу",
                                 "type" => self::FIELD_TYPE_LIST,
                                 "name" => self::PARAM_PAYMENT_LIST,
                                 "items" => $this->getCmsPaymentList(),
@@ -238,7 +238,7 @@ abstract class Adapter {
                                 "required" => 1
                             ),
                             array(
-                                "title" => "Статусы заказов",
+                                "title" => "Статус заказа для отправки на сервер DDelivery.ru ",
                                 "type" => self::FIELD_TYPE_LIST,
                                 "name" => self::PARAM_STATUS_LIST,
                                 "items" => $this->getCmsOrderStatusList(),
