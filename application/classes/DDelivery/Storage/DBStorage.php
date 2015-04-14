@@ -27,7 +27,18 @@ abstract class DBStorage {
     }
 
     /**
+     *
+     * Получить название таблицы
+     *
      * @return string
      */
     abstract public function  getTableName();
+
+    /**
+     *
+     * Создать хранилище
+     *
+     * @return bool
+     */
+    abstract public function  createStorage();
 } 

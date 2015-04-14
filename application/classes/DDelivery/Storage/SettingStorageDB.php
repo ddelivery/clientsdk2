@@ -25,6 +25,7 @@ class SettingStorageDB extends DBStorage implements  SettingStorageInterface {
         return 'ddelivery_settings';
     }
 
+
     public function createStorage(){
         if($this->dbType == Adapter::DB_MYSQL) {
             $query = "CREATE TABLE `$this->tableName` (
@@ -57,17 +58,30 @@ class SettingStorageDB extends DBStorage implements  SettingStorageInterface {
         return false;
     }
 
+
+    /**
+     * Получить список параметров
+     *
+     * @return array
+     */
     public function getParams(){
         $query = 'SELECT content FROM ' . $this->tableName . ' WHERE id = 1';
         $sth = $this->pdo->prepare( $query );
         $sth->execute();
         $result = $sth->fetchAll(\PDO::FETCH_OBJ);
         if( count($result) > 0 ){
-            return json_decode( (array)$result[0]->content );
+            return json_decode( $result[0]->content, true );
         }
         return array();
     }
 
+
+    /**
+     * Сохранить параметры
+     *
+     * @param $settings
+     * @return bool
+     */
     public function save($settings){
         if($this->isRecExist()){
             $query = 'UPDATE '.$this->tableName.' SET content=:content WHERE id=1';
@@ -75,10 +89,19 @@ class SettingStorageDB extends DBStorage implements  SettingStorageInterface {
             $query = 'INSERT INTO ' . $this->tableName . ' (content) VALUES (:content)';
         }
         $sth = $this->pdo->prepare( $query );
-        $sth->bindParam( ':content', json_encode( $settings ) );
+        $settings = json_encode( $settings );
+        $sth->bindParam( ':content',  $settings);
         return $sth->execute();
     }
 
+
+    /**
+     *
+     * Получить параметри по его имени
+     *
+     * @param $paramName
+     * @return null
+     */
     public function getParam($paramName){
         if(null === $this->settings){
             $this->settings = $this->getParams();

@@ -17,14 +17,14 @@ try{
     $adapter = new IntegratorAdapter();
     $container = new Container(array('adapter' => $adapter));
     //$container->getTokenStorage()->createStorage();
-    print_r($container->getBusiness()->generateToken());
+    //print_r($container->getBusiness()->generateToken());
     //print_r($container->getTokenStorage()->checkToken('b6e81e845567eb5aec764c84d58e066c'));
-    echo '<pre>';
+    //echo '<pre>';
     //print_r($container->getTokenStorage()->deleteExpired());
-    echo '</pre>';
-    echo '<pre>';
-    print_r($container->getTokenStorage()->getAll());
-    echo '</pre>';
+    //echo '</pre>';
+    //echo '<pre>';payment_list
+    print_r($container->getSettingStorage()->getParam('payment_list'));
+    //echo '</pre>';
     //generateToken
     //$container->getTokenStorage()->cre
     //$container->getUi()->render($_GET);
