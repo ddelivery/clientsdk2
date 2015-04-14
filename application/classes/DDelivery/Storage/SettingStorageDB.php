@@ -39,7 +39,8 @@ class SettingStorageDB extends DBStorage implements  SettingStorageInterface {
                             content TEXT
                       )";
         }
-        $this->pdo->exec($query);
+        $sth = $this->pdo->prepare( $query );
+        return $sth->execute();
     }
 
     /**

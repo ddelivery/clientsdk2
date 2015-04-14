@@ -36,7 +36,7 @@ class TokenStorageDB extends DBStorage implements TokenStorageInterface {
                       )";
         }
         $sth = $this->pdo->prepare( $query );
-        $sth->execute();
+        return $sth->execute();
     }
 
 

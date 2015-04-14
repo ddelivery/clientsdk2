@@ -107,7 +107,7 @@ class Business {
                 if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
                     $payment_price = 1;
                 $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status, $payment_price);
-                if( $result['success'] ){
+                if( isset($result['success']) && $result['success'] == 1 ){
                     $ddelivery_id = $result['data']['ddelivery_id'];
                     $order = $this->orderStorage->saveOrder($sdkId, $cmsId, $payment, $status,
                                                     $ddelivery_id, $order['id']);
