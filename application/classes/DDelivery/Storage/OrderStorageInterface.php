@@ -18,4 +18,6 @@ interface OrderStorageInterface {
     public function getOrder($cmsId);
 
     public function getOrderBySdkId($sdkId);
+
+    public function getAllOrders();
 } 

@@ -39,7 +39,7 @@ class OrderStorageDB extends DBStorage implements OrderStorageInterface {
                             cms_id TEXT,
                             payment TEXT,
                             status TEXT,
-                            payment_price INTEGER,
+                            payment_price INTEGER
                       )";
         }
         $sth = $this->pdo->prepare( $query );
@@ -57,7 +57,6 @@ class OrderStorageDB extends DBStorage implements OrderStorageInterface {
         $query = 'SELECT id FROM ' . $this->tableName . ' WHERE cms_id = :cms_id';
         $sth = $this->pdo->prepare( $query );
         $sth->bindParam( ':cms_id', $cmsId );
-        $sth = $this->pdo->prepare( $query );
         $sth->execute();
         $result = $sth->fetchAll(\PDO::FETCH_OBJ);
         if( count($result) > 0 ){
@@ -66,6 +65,14 @@ class OrderStorageDB extends DBStorage implements OrderStorageInterface {
         return false;
     }
 
+
+    public function getAllOrders(){
+        $query = 'SELECT * FROM ' . $this->tableName;
+        $sth = $this->pdo->prepare( $query );
+        $sth->execute();
+        $result = $sth->fetchAll(\PDO::FETCH_OBJ);
+        return $result;
+    }
 
     /**
      *
@@ -109,7 +116,7 @@ class OrderStorageDB extends DBStorage implements OrderStorageInterface {
         $sth = $this->pdo->prepare( $query );
         $sth->bindParam( ':cms_id', $cmsId );
         $sth->execute();
-        $result = $sth->fetchAll(\PDO::FETCH_OBJ);
+        $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
         if( count($result) > 0 ){
             return $result[0];
         }

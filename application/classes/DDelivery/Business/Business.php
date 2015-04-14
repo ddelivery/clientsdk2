@@ -10,6 +10,7 @@ namespace DDelivery\Business;
 
 
 use DDelivery\Adapter\Adapter;
+use DDelivery\DDeliveryException;
 use DDelivery\Server\Api;
 use DDelivery\Storage\OrderStorageInterface;
 use DDelivery\Storage\SettingStorageInterface;
@@ -80,8 +81,8 @@ class Business {
         $id = $this->orderStorage->saveOrder($sdkId, $cmsId, $payment, $status);
         if( !empty($id)  ){
             $result = $this->api->editOrder($sdkId, $cmsId, $payment, $status);
-            if( isset($result['success']) && $result['success'] == 1 ){
-                return true;
+            if( isset($result['success']) && $result['success'] == 1 && !empty($result['data']['order_id']) ){
+                return $result['data']['order_id'];
             }
         }
         return false;
@@ -114,11 +115,12 @@ class Business {
      * @param $cmsId
      * @param $payment
      * @param $status
+     * @throws \DDelivery\DDeliveryException
      * @return int
      */
     public function onCmsChangeStatus($sdkId, $cmsId, $payment, $status){
         $order = $this->orderStorage->getOrder($cmsId);
-        if( count($order) && $order['ddeliveryId'] == 0 ){
+        if( count($order) && $order['ddelivery_id'] == 0 ){
             if($this->settingStorage->getParam(Adapter::PARAM_STATUS_LIST) == $status){
                 $payment_price = 0;
                 if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
@@ -129,8 +131,13 @@ class Business {
                     $this->orderStorage->saveOrder($sdkId, $cmsId, $payment, $status,
                                                                 $ddelivery_id, $order['id']);
                     return $ddelivery_id;
+                }else{
+                    throw new DDeliveryException($result['error_description']);
                 }
             }
+        }
+        if( !empty($order['ddelivery_id']) ){
+            return $order['ddelivery_id'];
         }
         return 0;
     }

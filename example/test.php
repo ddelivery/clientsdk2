@@ -16,6 +16,7 @@ try{
     //echo implode(DIRECTORY_SEPARATOR, array(__DIR__,'application','bootstrap.php'));
     $adapter = new IntegratorAdapter();
     $container = new Container(array('adapter' => $adapter));
+    //$container->getOrderStorage()->createStorage();
     //$container->getTokenStorage()->createStorage();
     //print_r($container->getBusiness()->generateToken());
     //print_r($container->getTokenStorage()->checkToken('b6e81e845567eb5aec764c84d58e066c'));
@@ -23,7 +24,13 @@ try{
     //print_r($container->getTokenStorage()->deleteExpired());
     //echo '</pre>';
     //echo '<pre>';payment_list
-    print_r($container->getSettingStorage()->getParam('payment_list'));
+    //print_r($container->getSettingStorage()->getParam('payment_list'));
+    echo '<pre>';
+    print_r( $container->getOrderStorage()->getAllOrders() );
+    echo '</pre>';
+    print_r( $container->getBusiness()->onCmsChangeStatus(188,22,45,11) );
+
+
     //echo '</pre>';
     //generateToken
     //$container->getTokenStorage()->cre
