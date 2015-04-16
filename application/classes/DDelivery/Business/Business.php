@@ -24,7 +24,7 @@ class Business {
     /**
      * Время действия токена в минутах
      */
-    const TOKEN_LIFE_TIME = 20;
+    const TOKEN_LIFE_TIME = 1;
 
     /**
      * @var Api
@@ -104,6 +104,38 @@ class Business {
         return [];
     }
 
+    /**
+     *
+     * Отправить заказ  на DDelivery.ru
+     *
+     * @param $sdkId
+     * @param $cmsId
+     * @param $payment
+     * @param $status
+     * @return int
+     * @throws \DDelivery\DDeliveryException
+     */
+    public function cmsSendOrder($sdkId, $cmsId, $payment, $status){
+        $order = $this->orderStorage->getOrder($cmsId);
+        if( count($order) && $order['ddelivery_id'] == 0 ){
+            if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
+                $payment_price = 1;
+            $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status, $payment_price);
+            if( isset($result['success']) && $result['success'] == 1 ){
+                $ddelivery_id = $result['data']['ddelivery_id'];
+                $this->orderStorage->saveOrder($sdkId, $cmsId, $payment, $status,
+                    $ddelivery_id, $order['id']);
+                return $ddelivery_id;
+            }else{
+                throw new DDeliveryException($result['error_description']);
+            }
+        }
+
+        if( !empty($order['ddelivery_id']) ){
+            return $order['ddelivery_id'];
+        }
+        return 0;
+    }
 
     /**
      * Визивается при смене статуса заказа,
