@@ -174,9 +174,9 @@ class DDeliveryUI {
      * @throws DDeliveryException
      */
     public function actionAdmin(){
-        if( $this->adapter->isAdmin() ){
-            $token = $this->business->renderAdmin();
 
+        if($this->adapter->isAdmin()){
+            $token = $this->business->renderAdmin();
             if($token){
                 $url = $this->adapter->getSdkServer() . 'passport/' .
                                 $this->adapter->getApiKey() . '/admin.json?token=' . $token;
@@ -188,6 +188,7 @@ class DDeliveryUI {
         }
         throw new DDeliveryException("Ошибка входа в админ панель");
     }
+
 
     /**
      *
