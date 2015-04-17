@@ -226,6 +226,7 @@ class Business {
      * @return null
      */
     public function renderModuleToken($cart){
+
         $result = $this->api->pushCart($cart);
         if( isset($result['success']) && $result['success'] == 1 ){
             return $result['token'];
