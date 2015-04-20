@@ -47,7 +47,7 @@ class Api {
         $params = array(
             'id' => $sdkId
         );
-        return (array)CurlProvider::processGet($this->getUrl('order', 'view'), $params);
+        return (array)CurlProvider::processPost($this->getUrl('order', 'view'), $params);
     }
 
     public function editOrder($sdkId, $cmsId, $payment_variant, $status){
