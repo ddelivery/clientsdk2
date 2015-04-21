@@ -61,6 +61,7 @@ class Api {
     }
 
     public function accessAdmin($token){
+
         $params = array(
             'token' => $token
         );

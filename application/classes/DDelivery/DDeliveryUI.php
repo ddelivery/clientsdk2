@@ -69,8 +69,9 @@ class DDeliveryUI {
      */
     public function actionOrder(){
         if( !empty( $this->request['id']) ){
-            $order = $this->adapter->getOrder($this->request['id']);
-            return $order;
+            $order = (array)$this->adapter->getOrder($this->request['id']);
+            if(!empty($order))
+                return $order;
         }
         throw new DDeliveryException("Ошибка получения заказа");
     }
@@ -84,8 +85,9 @@ class DDeliveryUI {
      */
     public function actionSync(){
         if( !empty( $this->request['id']) ){
-            $order = $this->business->getOrder($this->request['id']);
-            return $order;
+            $order = (array)$this->business->getOrder($this->request['id']);
+            if(!empty($order))
+                return $order;
         }
         throw new DDeliveryException("Заказ DDelivery не найден");
     }
@@ -101,7 +103,7 @@ class DDeliveryUI {
     public function actionOrders(){
         if( $this->validateDate( $this->request['from'] ) &&
                 $this->validateDate( $this->request['to'])){
-            $orders = $this->adapter->getOrders($this->request['from'], $this->request['to']);
+            $orders = (array)$this->adapter->getOrders($this->request['from'], $this->request['to']);
             if( count($orders) ){
                 return $orders;
             }
@@ -117,7 +119,25 @@ class DDeliveryUI {
      * @return array
      */
     public function actionFields(){
-        return $this->adapter->getFieldList();
+        $fields = $this->adapter->getFieldList();
+        return (array)$fields;
+    }
+
+
+
+    /**
+     *
+     * Получить инфу по сдк
+     *
+     * @throws DDeliveryException
+     */
+    public function actionVersion(){
+        $info = array(
+                'cms' => (string)$this->adapter->getCmsName(),
+                'version' => (string)$this->adapter->getCmsVersion(),
+                'sdk' => (string)Adapter::SDK_VERSION
+        );
+        return $info;
     }
 
     /**
@@ -159,12 +179,15 @@ class DDeliveryUI {
         $token = $this->business->renderModuleToken($cart);
         if($token){
             $url = $this->adapter->getSdkServer() . 'ui/' . $token . '/module.json';
-            $params = http_build_query($this->adapter->getUserParams($this->request));
+            $params = http_build_query((array)$this->adapter->getUserParams($this->request));
             $url .= (empty($params))?'':'?' . $params;
             $this->setRedirect($url);
         }
         throw new DDeliveryException("Ошибка входа в магазин");
     }
+
+
+
 
 
     /**
@@ -236,7 +259,7 @@ class DDeliveryUI {
             $data = $e->getMessage();
             $data = array(['error' => $data]);
             echo $e->getMessage();
-            //return;
+            return;
         }
         $this->postRender();
         echo  json_encode(array( 'success' => $success, 'data' => $data ));
@@ -264,7 +287,7 @@ class DDeliveryUI {
      * @return array
      */
     public function getTokenMethod(){
-        return ['orders', 'push', 'fields', 'save', 'order', 'sync'];
+        return ['orders', 'push', 'fields', 'save', 'order', 'sync', 'version'];
     }
 
     public function preRender(){

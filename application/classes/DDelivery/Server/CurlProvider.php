@@ -52,7 +52,6 @@ class CurlProvider {
         $url = $url . '?' .http_build_query($params);
         curl_setopt($curl, CURLOPT_URL, $url  );
         $result = curl_exec($curl);
-
         curl_close($curl);
         return json_decode( $result, true );
     }

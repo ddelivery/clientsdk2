@@ -15,6 +15,8 @@ abstract class Adapter {
 
     public $params;
 
+    const SDK_VERSION          = '0.9';
+
     const SDK_SERVER_SDK = 'http://sdk.ddelivery.ru/api/v1/';
 
     const SDK_SERVER_STAGE_SDK = 'http://stagesdk.ddelivery.ru/api/v1/';
