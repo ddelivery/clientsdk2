@@ -8,11 +8,16 @@
     "homepage": "http://ddelivery.ru/",
     "type": "library",
     "license": "MIT",
-    "minimum-stability": "dev",
+
     "autoload": {
         "psr-0": {
             "DDelivery": "application/classes"
         }
     },
-    "version": "1.0.0-dev"
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    }
+
 }
