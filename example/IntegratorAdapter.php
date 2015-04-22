@@ -36,11 +36,11 @@ class IntegratorAdapter extends Adapter  {
     }
 
     public function getCmsName(){
-        // TODO: Implement getCmsName() method.
+        return 'CmsExample';
     }
 
     public function getCmsVersion(){
-        // TODO: Implement getCmsVersion() method.
+        return '1.1';
     }
 
     /**
