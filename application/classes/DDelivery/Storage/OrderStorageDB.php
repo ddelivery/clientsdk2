@@ -27,6 +27,7 @@ class OrderStorageDB extends DBStorage implements OrderStorageInterface {
                             `ddelivery_id` int(11)  DEFAULT NULL,
                             `cms_id` varchar(60) NOT NULL,
                             `payment` varchar(60) DEFAULT NULL,
+                            `created` DATETIME NOT NULL,
                             `status` varchar(60) DEFAULT NULL,
                             `payment_price` int(11) DEFAULT NULL,
                             PRIMARY KEY (`id`)
@@ -37,6 +38,7 @@ class OrderStorageDB extends DBStorage implements OrderStorageInterface {
                             sdk_id INTEGER,
                             ddelivery_id INTEGER,
                             cms_id TEXT,
+                            created TEXT,
                             payment TEXT,
                             status TEXT,
                             payment_price INTEGER

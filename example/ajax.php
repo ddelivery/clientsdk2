@@ -8,18 +8,12 @@ header('Content-Type: text/html; charset=utf-8');
  */
 use DDelivery\Adapter\Container;
 
-error_reporting(E_ALL);
+//error_reporting(E_ALL);
 
 require(implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', 'application','bootstrap.php')));
-try{
-    require('IntegratorAdapter.php');
-    //echo implode(DIRECTORY_SEPARATOR, array(__DIR__,'application','bootstrap.php'));
-    $adapter = new IntegratorAdapter();
-    $container = new Container(array('adapter' => $adapter));
-    $container->getUi()->render($_REQUEST);
-}catch ( \Exception $e){
-    echo $e->getMessage();
-    echo '<pre>';
-    print_r($e->getTrace());
-    echo '</pre>';
-}
+require('IntegratorAdapter.php');
+//echo implode(DIRECTORY_SEPARATOR, array(__DIR__,'application','bootstrap.php'));
+$adapter = new IntegratorAdapter();
+$container = new Container(array('adapter' => $adapter));
+//$container->getBusiness()->initStorage();
+$container->getUi()->render($_REQUEST);

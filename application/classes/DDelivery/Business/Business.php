@@ -12,6 +12,7 @@ namespace DDelivery\Business;
 use DDelivery\Adapter\Adapter;
 use DDelivery\DDeliveryException;
 use DDelivery\Server\Api;
+use DDelivery\Storage\LogStorageInterface;
 use DDelivery\Storage\OrderStorageInterface;
 use DDelivery\Storage\SettingStorageInterface;
 use DDelivery\Storage\TokenStorageInterface;
@@ -46,14 +47,20 @@ class Business {
      */
     private  $orderStorage;
 
+    /**
+     * @var LogStorageInterface
+     */
+    private  $log;
+
 
     public  function __construct( Api $api, TokenStorageInterface $tokenStorage,
                                   SettingStorageInterface $settingStorage,
-                                  OrderStorageInterface $orderStorage ){
+                                  OrderStorageInterface $orderStorage, LogStorageInterface $log ){
         $this->api = $api;
         $this->tokenStorage = $tokenStorage;
         $this->settingStorage = $settingStorage;
         $this->orderStorage = $orderStorage;
+        $this->log = $log;
     }
 
 
@@ -62,9 +69,10 @@ class Business {
      * Создать стореджи
      */
     public function initStorage(){
-        $this->tokenStorage->createStorage();
         $this->settingStorage->createStorage();
+        $this->tokenStorage->createStorage();
         $this->orderStorage->createStorage();
+        $this->log->createStorage();
     }
 
     /**

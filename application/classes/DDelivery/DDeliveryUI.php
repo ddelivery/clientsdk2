@@ -12,6 +12,7 @@ namespace DDelivery;
 use DateTime;
 use DDelivery\Adapter\Adapter;
 use DDelivery\Business\Business;
+use DDelivery\Storage\LogStorageInterface;
 
 class DDeliveryUI {
 
@@ -28,18 +29,11 @@ class DDeliveryUI {
     public $business;
 
     /**
-     * @param $adapter
+     * @var LogStorageInterface
      */
-    public function setAdapter(Adapter $adapter){
-        $this->adapter = $adapter;
-    }
+    public $log;
 
-    /**
-     * @param Business $business
-     */
-    public function setBusiness(Business $business){
-        $this->business = $business;
-    }
+
 
     public function actionDefault(){
         return 1;
@@ -75,6 +69,11 @@ class DDeliveryUI {
         throw new DDeliveryException("Ошибка получения заказа");
     }
 
+    public function actionLog(){
+        $logs = $this->log->getAllLogs();
+        $this->log->deleteLogs();
+        return $logs;
+    }
 
     /**
      * Получить информацию о заказе по cmsId
@@ -235,8 +234,7 @@ class DDeliveryUI {
             $success = 0;
             $data = $e->getMessage();
             $data = array(['error' => $data]);
-            echo $e->getMessage();
-            //return;
+            $this->log->saveLog($e->getMessage());
         }
         $this->postRender();
         echo  json_encode(array( 'success' => $success, 'data' => $data ));
@@ -264,7 +262,7 @@ class DDeliveryUI {
      * @return array
      */
     public function getTokenMethod(){
-        return ['orders', 'push', 'fields', 'save', 'order', 'sync'];
+        return ['orders', 'push', 'fields', 'save', 'order', 'sync', 'log'];
     }
 
     public function preRender(){
@@ -274,6 +272,29 @@ class DDeliveryUI {
     public function setRedirect($url){
         header('Location: '. $url);
     }
+
+    /**
+     * @param $adapter
+     */
+    public function setAdapter(Adapter $adapter){
+        $this->adapter = $adapter;
+    }
+
+    /**
+     * @param Business $business
+     */
+    public function setBusiness(Business $business){
+        $this->business = $business;
+    }
+
+
+    /**
+     * @param Storage\LogStorageInterface $log
+     */
+    public function setLog(LogStorageInterface $log){
+        $this->log = $log;
+    }
+
 
     public function postRender(){
 

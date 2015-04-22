@@ -13,6 +13,8 @@ use DDelivery\Business\Business;
 use DDelivery\DDeliveryException;
 use DDelivery\DDeliveryUI;
 use DDelivery\Server\Api;
+use DDelivery\Storage\LogStorageDB;
+use DDelivery\Storage\LogStorageInterface;
 use DDelivery\Storage\OrderStorageDB;
 use DDelivery\Storage\OrderStorageInterface;
 use DDelivery\Storage\SettingStorageDB;
@@ -46,6 +48,7 @@ class Container {
             $ui = new DDeliveryUI();
             $ui->setAdapter($this->getAdapter());
             $ui->setBusiness($this->getBusiness());
+            $ui->setLog($this->getLogStorage());
             $this->shared['ui'] = $ui;
         }
         return $this->shared['ui'];
@@ -63,10 +66,27 @@ class Container {
             $orderStorage = $this->getOrderStorage();
             $tokenStorage = $this->getTokenStorage();
             $settingStorage = $this->getSettingStorage();
-            $business = new Business($api, $tokenStorage, $settingStorage, $orderStorage);
+            $log = $this->getLogStorage();
+            $business = new Business($api, $tokenStorage, $settingStorage, $orderStorage, $log);
             $this->shared['business'] = $business;
         }
         return $this->shared['business'];
+    }
+
+    /**
+     * Получить хранилище настроек
+     *
+     * @return LogStorageInterface
+     */
+    public function getLogStorage(){
+        if(!isset($this->shared['log'])){
+            $adapter = $this->getAdapter();
+            $pdo = $adapter->getDb();
+            $config = $adapter->getDbConfig();
+            $setting = new LogStorageDB($pdo, $config['type'], $config['prefix']);
+            $this->shared['setting'] = $setting;
+        }
+        return $this->shared['setting'];
     }
 
     /**
