@@ -27,20 +27,25 @@ class SettingStorageDB extends DBStorage implements  SettingStorageInterface {
 
 
     public function createStorage(){
+        $this->pdo->beginTransaction();
+
         if($this->dbType == Adapter::DB_MYSQL) {
-            $query = "CREATE TABLE `$this->tableName` (
+            $query = "CREATE TABLE IF NOT EXISTS  `$this->tableName` (
                             `id` int(11) NOT NULL AUTO_INCREMENT,
                             `content` text DEFAULT NULL,
                             PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
         }elseif($this->dbType == Adapter::DB_SQLITE){
-            $query = "CREATE TABLE $this->tableName (
+            $query = "CREATE TABLE IF NOT EXISTS  $this->tableName (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             content TEXT
                       )";
         }
         $sth = $this->pdo->prepare( $query );
-        return $sth->execute();
+        $res = $sth->execute();
+        $this->pdo->commit();
+        return $res;
+        //return $sth->execute();
     }
 
     /**

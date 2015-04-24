@@ -31,14 +31,14 @@ class LogStorageDB extends DBStorage implements LogStorageInterface  {
      */
     public function  createStorage(){
         if($this->dbType == Adapter::DB_MYSQL) {
-            $query = "CREATE TABLE `$this->tableName` (
+            $query = "CREATE TABLE IF NOT EXISTS `$this->tableName` (
                             `id` int(11) NOT NULL AUTO_INCREMENT,
                             `created` DATETIME NOT NULL,
                             `content` TEXT DEFAULT NULL,
                             PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
         }elseif($this->dbType == Adapter::DB_SQLITE){
-            $query = "CREATE TABLE $this->tableName (
+            $query = "CREATE TABLE IF NOT EXISTS $this->tableName (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             created TEXT,
                             content TEXT

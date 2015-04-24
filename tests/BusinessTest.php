@@ -27,11 +27,14 @@ class BusinessTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testInitStorage(){
-        $this->business->initStorage();
-        //$this->assertTrue($this->business->initStorage());
+        $this->assertTrue($this->business->initStorage());
+    }
+
+    public function testOnCmsOrderFinish(){
+        // $this->assertTrue($this->business->initStorage());
     }
 
     protected function tearDown(){
-        //unlink( __DIR__ . '/__data/db.sqlite' );
+        unlink( __DIR__ . '/__data/db.sqlite' );
     }
 } 

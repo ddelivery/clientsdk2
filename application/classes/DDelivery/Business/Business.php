@@ -69,10 +69,15 @@ class Business {
      * Создать стореджи
      */
     public function initStorage(){
-        $this->settingStorage->createStorage();
-        $this->tokenStorage->createStorage();
-        $this->orderStorage->createStorage();
-        $this->log->createStorage();
+        $tokenStorage = $this->tokenStorage->createStorage();
+        $settingStorage = $this->settingStorage->createStorage();
+        $orderStorage = $this->orderStorage->createStorage();
+        $log = $this->log->createStorage();
+        if( $tokenStorage && $settingStorage && $orderStorage && $log )
+           return true;
+
+        return false;
+
     }
 
     /**

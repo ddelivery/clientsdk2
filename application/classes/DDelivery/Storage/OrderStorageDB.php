@@ -21,7 +21,7 @@ class OrderStorageDB extends DBStorage implements OrderStorageInterface {
      */
     public function createStorage(){
         if($this->dbType == Adapter::DB_MYSQL) {
-            $query = "CREATE TABLE `$this->tableName` (
+            $query = "CREATE TABLE IF NOT EXISTS `$this->tableName` (
                             `id` int(11) NOT NULL AUTO_INCREMENT,
                             `sdk_id` int(11) NOT NULL,
                             `ddelivery_id` int(11)  DEFAULT NULL,
@@ -33,7 +33,7 @@ class OrderStorageDB extends DBStorage implements OrderStorageInterface {
                             PRIMARY KEY (`id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
         }elseif($this->dbType == Adapter::DB_SQLITE){
-            $query = "CREATE TABLE $this->tableName (
+            $query = "CREATE TABLE IF NOT EXISTS $this->tableName (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             sdk_id INTEGER,
                             ddelivery_id INTEGER,

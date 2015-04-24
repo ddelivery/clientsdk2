@@ -9,7 +9,9 @@
 namespace DDelivery\Adapter;
 
 
+use DDelivery\DB\ConnectInterface;
 use DDelivery\DDeliveryException;
+use PDO;
 
 abstract class Adapter {
 
@@ -96,7 +98,8 @@ abstract class Adapter {
             }
 
             $pdo = new \PDO('sqlite:' . $dbConfig['dbPath']);
-            $pdo->exec('PRAGMA journal_mode=WAL;');
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            //$pdo->exec('PRAGMA journal_mode=WAL;');
             //$pdo->errorInfo()
         } elseif ($dbConfig['type'] == self::DB_MYSQL) {
             $pdo = new \PDO($dbConfig['dsn'], $dbConfig['user'], $dbConfig['pass']);

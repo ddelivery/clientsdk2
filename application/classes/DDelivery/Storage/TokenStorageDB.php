@@ -22,14 +22,14 @@ class TokenStorageDB extends DBStorage implements TokenStorageInterface {
 
     public function createStorage(){
         if($this->dbType == Adapter::DB_MYSQL) {
-            $query = "CREATE TABLE `$this->tableName` (
+            $query = "CREATE TABLE IF NOT EXISTS  `$this->tableName` (
                             `token` varchar(60) NOT NULL,
                             `created` DATETIME NOT NULL,
                             `expires` DATETIME NOT NULL,
                             PRIMARY KEY (`token`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
         }elseif($this->dbType == Adapter::DB_SQLITE){
-            $query = "CREATE TABLE $this->tableName (
+            $query = "CREATE TABLE IF NOT EXISTS  $this->tableName (
                             token PRIMARY KEY,
                             created TEXT,
                             expires TEXT
