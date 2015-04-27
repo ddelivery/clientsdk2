@@ -85,7 +85,7 @@ class SettingStorageDB extends DBStorage implements  SettingStorageInterface {
     /**
      * Сохранить параметры
      *
-     * @param $settings
+     * @param array $settings
      * @return bool
      */
     public function save($settings){

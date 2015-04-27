@@ -73,9 +73,7 @@ class TokenStorageDB extends DBStorage implements TokenStorageInterface {
             $query = 'DELETE FROM ' . $this->tableName . ' WHERE expires < NOW()';
         }
         $sth = $this->pdo->prepare( $query );
-        $sth->execute();
-        $result = $sth->fetchAll(\PDO::FETCH_OBJ);
-        return $result;
+        return $sth->execute();
     }
 
     /**

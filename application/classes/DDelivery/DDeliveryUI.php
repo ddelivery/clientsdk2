@@ -69,6 +69,12 @@ class DDeliveryUI {
         throw new DDeliveryException("Ошибка получения заказа");
     }
 
+
+
+    /**
+     * Сбор логов
+     * @return array
+     */
     public function actionLog(){
         $logs = $this->log->getAllLogs();
         $this->log->deleteLogs();

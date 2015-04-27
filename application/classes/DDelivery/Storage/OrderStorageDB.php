@@ -97,7 +97,7 @@ class OrderStorageDB extends DBStorage implements OrderStorageInterface {
                     VALUES (:sdk_id, :payment, :status, :ddelivery_id, :cms_id)';
         }
         $sth = $this->pdo->prepare( $query );
-        $sth->bindParam( ':sdk_id', $sdk_id );
+        $sth->bindParam( ':sdk_id', $sdkId );
         $sth->bindParam( ':payment', $payment );
         $sth->bindParam( ':status', $status );
         $sth->bindParam( ':ddelivery_id', $ddeliveryId );
@@ -138,7 +138,7 @@ class OrderStorageDB extends DBStorage implements OrderStorageInterface {
         
         $sth->bindParam( ':sdk_id', $sdkId );
         $sth->execute();
-        $result = $sth->fetchAll(\PDO::FETCH_OBJ);
+        $result = $sth->fetchAll(\PDO::FETCH_ASSOC);
         if( count($result) > 0 ){
             return $result[0];
         }

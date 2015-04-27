@@ -73,8 +73,6 @@ class LogStorageDB extends DBStorage implements LogStorageInterface  {
     public function deleteLogs(){
         $query = 'DELETE FROM ' . $this->tableName;
         $sth = $this->pdo->prepare( $query );
-        $sth->execute();
-        $result = $sth->fetchAll(\PDO::FETCH_OBJ);
-        return $result;
+        return $sth->execute();
     }
 }

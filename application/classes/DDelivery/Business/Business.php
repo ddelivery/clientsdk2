@@ -330,4 +330,11 @@ class Business {
     {
         return $this->tokenStorage;
     }
+
+    /**
+     * @return \DDelivery\Storage\LogStorageInterface
+     */
+    public function getLog(){
+        return $this->log;
+    }
 } 
