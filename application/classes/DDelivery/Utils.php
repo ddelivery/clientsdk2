@@ -12,7 +12,6 @@ namespace DDelivery;
 class Utils {
 
 
-
     public static function generateToken(){
         $rand = rand( -1000, 1000 );
         $token = md5( self::getUserHost() . $rand . time() );
@@ -45,7 +44,12 @@ class Utils {
         }elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
             $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
         }else{
-            $ip=$_SERVER['REMOTE_ADDR'];
+            if(!isset($_SERVER['REMOTE_ADDR'])){
+                $ip=$_SERVER['REMOTE_ADDR'];
+            }else{
+                $ip=rand( -1000, 1000 );
+            }
+
         }
         return $ip;
     }
