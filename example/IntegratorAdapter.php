@@ -97,8 +97,11 @@ class IntegratorAdapter extends Adapter  {
     public function getOrder($id){
         return array(
             'city' => 'Урюпинск',
-            'payment' => 22,
+            'payment_id' => 22,
+            'payment_name' => "Карточкой",
+            'status_id' => 11,
             'status' => 'Статус',
+            'date' => '2015.12.12',
             'sum' => 2200,
             'delivery' => 220,
         );
@@ -119,22 +122,31 @@ class IntegratorAdapter extends Adapter  {
         return array(
                 array(
                     'city' => 'Урюпинск',
-                    'payment' => 22,
+                    'payment_id' => 22,
+                    'payment_name' => "Карточкой",
+                    'status_id' => 11,
                     'status' => 'Статус',
+                    'date' => '2015.12.12',
                     'sum' => 2200,
                     'delivery' => 220,
                 ),
                 array(
                     'city' => 'г. Москва, Московская область',
-                    'payment' => 'Пример оплаты',
-                    'status' => 'Статус 222',
+                    'payment_id' => 22,
+                    'payment_name' => "Наличными",
+                    'status_id' => 11,
+                    'status' => 'Отгружен',
+                    'date' => '2015.13.14',
                     'sum' => 2100,
                     'delivery' => 120,
                 ),
                 array(
                     'city' => 'Сити Питер',
-                    'payment' => 'Пример оплаты 2',
-                    'status' => 33,
+                    'payment_id' => 42,
+                    'payment_name' => "Рубли",
+                    'status_id' => 11,
+                    'status' => 'Отгружен',
+                    'date' => '2015.11.17',
                     'sum' => 2100,
                     'delivery' => 120,
                 )
