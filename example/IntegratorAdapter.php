@@ -11,6 +11,20 @@ use DDelivery\DDeliveryException;
 
 class IntegratorAdapter extends Adapter  {
 
+
+
+    /**
+     *
+     * Получить апи ключ
+     *
+     * @throws DDeliveryException
+     * @return string
+     */
+    public function getApiKey(){
+        return '584ac2d4ef3daa60b297a820385e1c70';
+        //throw new DDeliveryException("Запустить апи ");
+    }
+
     /**
      *
      * При синхронизации статусов заказов необходимо
@@ -167,17 +181,6 @@ class IntegratorAdapter extends Adapter  {
         return true;
     }
 
-    /**
-     *
-     * Получить апи ключ
-     *
-     * @throws DDeliveryException
-     * @return string
-     */
-    public function getApiKey(){
-        return '584ac2d4ef3daa60b297a820385e1c70';
-        throw new DDeliveryException("переопределить");
-    }
 
     public function getCustomSettingsFields(){
         return array(
