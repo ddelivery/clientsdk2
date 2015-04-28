@@ -40,35 +40,221 @@ onCmsOrderFinish класса Business
 В первую очередь необходимо переопределить абстрактные методы, при необходимости можно  переопределить
 родительские
 
-```
-public function getApiKey():
+
 Получить апи ключ из настроек. Привязка с CAP происходит при первом вхождении
 через точку входа по ссылке ajax.php?action=admin, при этом происходит проверка
 наличия прав администратора CMS и переход в CAP где можно проводить гибкую настройку
 правил доставки
-
-public function getCmsName():
-название CMS
-
-public function getCmsVersion():
-версия CMS
-
-public function getProductCart():
-получить содержание корзины. В зависимости от того  где CMS хранит содержимое корзины,
-ее необходимо преобразовать в массив как в примере IntegratorAdapter.php
-
-public function getDiscount():
-получить скидку для клиента, для того чтобы отнять ее от общей стоимости заказа
-
-
-
-
-
-
-
+```
+public function getApiKey(){
+    return 'api_key';
+}
 ```
 
 
+Название CMS
+```
+public function getCmsName(){
+    return "Joomla";
+    return "Bitrix";
+    ...
+}
+```
+
+Версия CMS
+```
+public function getCmsVersion(){
+    return '1.1';
+}
+```
+
+
+Получить содержание корзины. В зависимости от того  где CMS хранит содержимое корзины(сессия, БД, cookies),
+ее необходимо преобразовать в массив как в примере IntegratorAdapter.php
+
+```
+public function getProductCart(){
+    return array(
+                        array(
+                            "id"=>12,
+                            "name"=>"Веселый клоун",
+                            "width"=>10,
+                            "height"=>10,
+                            "length"=>10,
+                            "weight"=>1,
+                            "price"=>1110,
+                            "quantity"=>2,
+                            "sku"=>"app2"
+                        ),
+                        array(
+                            ...
+                        );
+            );
+}
+```
+Получить скидку для клиента, для того чтобы отнять ее от общей стоимости заказа
+
+```
+public function getDiscount(){
+    return 50;
+}
+```
+
+Проверка пользователя на наличия прав администратора CMS
+
+```
+public function isAdmin(){
+        if($_SESSION['admin'] == 1){
+            return true;
+        }
+        return false;
+}
+```
+
+
+clientSDK предусматривает автоматическую синхронизацию  магазина со статусами
+DDelivery.ru
+При синхронизации статусов заказов необходимо произвести UPDATE полей статуса заказа
+в БД заказов. Синхронизация будет проводится 2 раза в сутки
+
+В качестве аргумента передается массив $order
+```
+array(
+           'id' => 'status',
+           'id2' => 'status2',
+ );
+```
+, где 'id' - идентификатор заказа CMS, 'status' - значение статуса для CMS(соответствие статусов
+выставляется в CAP)
+Названия полей и таблиц уникальны для каждой CMS
+```
+public function changeStatus(array $orders){
+        foreach($orders as $key=>$item){
+            $query = "UPDATE orders_table_cms SET status_cms=$item WHERE order_id=$key"
+        }
+}
+```
+Получить поля заказа из CMS по идентификатору
+Значения ключей:
+'city' => город назначения,
+'payment' => тип оплаты,
+'status' => статус заказа,
+'sum' => сумма заказа,
+'delivery' => стоимость доставки
+
+```
+public function getOrder($id){
+    return array(
+            'city' => 'Урюпинск',
+            'payment' => 22,
+            'status' => 'Статус',
+            'sum' => 2200,
+            'delivery' => 220,
+        );
+}
+```
+
+Получить поля списка заказов за период c $from $to заказа из CMS
+$from - строка в формате 'Y.m.d'
+$to - строка в формате 'Y.m.d'
+
+```
+public function getOrders($from, $to){
+                return array(
+                    array(
+                        'city' => 'Урюпинск',
+                        'payment' => 22,
+                        'status' => 'Статус',
+                        'sum' => 2200,
+                        'delivery' => 220,
+                    ),
+                    array(
+                        'city' => 'г. Москва, Московская область',
+                        'payment' => 'Пример оплаты',
+                        'status' => 'Статус 222',
+                        'sum' => 2100,
+                        'delivery' => 120,
+                    )
+                );
+}
+```
+
+Получить список полей пользователя в виде массива с предопределенным ключом
+Необходимо это для того чтобы при окончании оформления заказа в модуле поля заполнялись автоматически
+
+Если это зарегистрированный пользователь то возможно CMS хранитв сессии эти данные,
+можно взять их оттудова, или передать через URL при инициализации модуля
+
+```
+public function getUserParams($request){
+    return array(
+                self::USER_FIELD_NAME => 'Сидоров Сережа',
+                self::USER_FIELD_EMAIL => 'syd@email.com',
+                self::USER_FIELD_PHONE => '79225551234',
+                self::USER_FIELD_STREET => 'Цветаевой',
+                self::USER_FIELD_COMMENT => 'Комментарий',
+                self::USER_FIELD_HOUSE => '2а',
+                self::USER_FIELD_FLAT => '123',
+                self::USER_FIELD_ZIP => '10101'
+            );
+}
+```
+
+
+Получить список статусов заказов из CMS - в дальнейшем они
+атоматически подтягиваются в CAP  и можно настраивать соответствие  статусов
+
+```
+public function getCmsOrderStatusList(){
+        return array('10' => 'Завершен', '11' => 'Куплен');
+    }
+```
+
+
+Получить список способовопланы для настройки  в CAP  способа оплаты соответствующему
+наложенному платежу
+```
+public function getCmsPaymentList(){
+        return array('14' => 'Наличными', '17' => 'Карточкой');
+}
+```
+
+Получить список способовопланы для настройки  в CAP  способа оплаты соответствующему
+наложенному платежу
+```
+public function getCmsPaymentList(){
+        return array('14' => 'Наличными', '17' => 'Карточкой');
+}
+```
+
+
+Есть возможность добавлять свои кастомные поля в CAP и потом получать их локально
+self::FIELD_TYPE_TEXT - текстовое поле
+self::FIELD_TYPE_CHECKBOX - чекбокс
+self::FIELD_TYPE_LIST - список
+```
+public function getCustomSettingsFields(){
+        return array(
+                    array(
+                        "title" => "Название (Пример кастомного поля)",
+                        "type" => self::FIELD_TYPE_TEXT,
+                        "name" => "name",
+                        //"items" => getStatusList(),
+                        "default" => 0,
+                        "data_type" => array("string"),
+                        "required" => 1
+                    ),
+                    array(
+                         "title" => "Выводить способ доставки(Пример кастомного поля)",
+                         "type" => self::FIELD_TYPE_CHECKBOX,
+                         "name" => "checker",
+                         "default" => true,
+                         "data_type" => array("int"),
+                         "required" => 1
+                    )
+        );
+    }
+```
 
 
 

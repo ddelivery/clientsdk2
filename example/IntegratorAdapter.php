@@ -28,13 +28,13 @@ class IntegratorAdapter extends Adapter  {
     /**
      *
      * При синхронизации статусов заказов необходимо
-     * [
+     * array(
      *      'id' => 'status',
      *      'id2' => 'status2',
-     * ]
+     * )
      *
      * @param array $orders
-     * @return mixed
+     * @return bool
      */
     public function changeStatus(array $orders){
         // TODO: Implement changeStatus() method.
@@ -121,11 +121,24 @@ class IntegratorAdapter extends Adapter  {
      * @param $request
      * @return array
      */
-    public function getUserParams($request)
-    {
-        // TODO: Implement getUserParams() method.
+    public function getUserParams($request){
+        return array(
+            self::USER_FIELD_NAME => 'Сидоров Сережа',
+            self::USER_FIELD_EMAIL => 'syd@email.com',
+            self::USER_FIELD_PHONE => '79225551234',
+            self::USER_FIELD_STREET => 'Цветаевой',
+            self::USER_FIELD_COMMENT => 'Комментарий',
+            self::USER_FIELD_HOUSE => '2а',
+            self::USER_FIELD_FLAT => '123',
+            self::USER_FIELD_ZIP => '10101'
+        );
     }
 
+    /**
+     * Получить скидку в рублях
+     *
+     * @return float
+     */
     public function getDiscount(){
         return 0;
     }
@@ -182,6 +195,11 @@ class IntegratorAdapter extends Adapter  {
     }
 
 
+    /**
+     * Получить список кастомных полей в CAP
+     *
+     * @return array
+     */
     public function getCustomSettingsFields(){
         return array(
                     array(

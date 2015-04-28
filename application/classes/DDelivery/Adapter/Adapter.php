@@ -43,6 +43,47 @@ abstract class Adapter {
 
     const DB_SQLITE          = 2;
 
+    /**
+     * Поле ФИО
+     */
+    const USER_FIELD_NAME = 'name';
+
+    /**
+     * Поле email
+     */
+    const USER_FIELD_EMAIL  = 'email';
+
+    /**
+     * Поле телефон
+     */
+    const USER_FIELD_PHONE  = 'phone';
+
+    /**
+     * Поле улица
+     */
+    const USER_FIELD_STREET  = 'street';
+
+
+    /**
+     * Поле дом
+     */
+    const USER_FIELD_HOUSE  = 'house';
+
+    /**
+     * Поле Квартира
+     */
+    const USER_FIELD_FLAT = 'flat';
+
+    /**
+     * Поле индекс
+     */
+    const USER_FIELD_ZIP  = 'zip';
+
+    /**
+     * Поле комментарий
+     */
+    const USER_FIELD_COMMENT  = 'comment';
+
     public function __construct($params = []){
         $this->params = $params;
     }
