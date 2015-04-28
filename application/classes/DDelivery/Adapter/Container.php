@@ -30,7 +30,6 @@ class Container {
 
     public function __construct(array $parameters){
         if( array_key_exists('adapter', $parameters) && ($parameters['adapter'] instanceof Adapter) ){
-
             $this->shared['adapter'] = $parameters['adapter'];
             $this->parameters = $parameters;
         }else{

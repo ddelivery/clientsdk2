@@ -25,6 +25,33 @@ class IntegratorAdapter extends Adapter  {
         //throw new DDeliveryException("Запустить апи ");
     }
 
+    public function getPathByDB(){
+        return '../db/db.sqlite';
+    }
+
+    /**
+     * Настройки базы данных
+     * @return array
+     */
+    public function getDbConfig(){
+        return array(
+            'type' => self::DB_SQLITE,
+            'dbPath' => $this->getPathByDB(),
+            'prefix' => '',
+        );
+        return array(
+            'pdo' => new \PDO('mysql:host=localhost;dbname=ddelivery', 'root', '0', array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")),
+            'prefix' => '',
+        );
+        return array(
+            'type' => self::DB_MYSQL,
+            'dsn' => 'mysql:host=localhost;dbname=ddelivery',
+            'user' => 'root',
+            'pass' => '0',
+            'prefix' => '',
+        );
+    }
+
     /**
      *
      * При синхронизации статусов заказов необходимо
