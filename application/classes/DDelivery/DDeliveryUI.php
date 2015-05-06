@@ -115,6 +115,18 @@ class DDeliveryUI {
         throw new DDeliveryException("Ошибка получения списка заказов");
     }
 
+    /**
+     * Получить информацию о заказе по cmsId
+     *
+     * @return array
+     * @throws DDeliveryException
+     */
+    public function actionVersion(){
+        return array( 'version' => $this->adapter->getCmsVersion(),
+            'cms' => $this->adapter->getCmsName(),
+            'sdk' => Adapter::SDK_VERSION);
+    }
+
 
     /**
      * Получить список полей настроек
@@ -268,7 +280,7 @@ class DDeliveryUI {
      * @return array
      */
     public function getTokenMethod(){
-        return ['orders', 'push', 'fields', 'save', 'order', 'sync', 'log'];
+        return ['orders', 'push', 'fields', 'save', 'order', 'sync', 'log', 'version'];
     }
 
     public function preRender(){
