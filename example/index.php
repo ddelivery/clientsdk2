@@ -13,6 +13,7 @@
     var select_way = document.getElementById("select_way");
     DDeliveryIntegration.onOpen = function(){
         alert("Хук на открытие окна");
+        return true;
     };
     DDeliveryIntegration.onChange = function(data){
         alert("Хук на окончание оформления заказа и обработка результата");
