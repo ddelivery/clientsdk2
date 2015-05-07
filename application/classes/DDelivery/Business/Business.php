@@ -222,7 +222,6 @@ class Business {
      */
     public function renderAdmin(){
         $token = $this->generateToken();
-
         if(empty($token))
             throw new DDeliveryException("Ошибка генерции токена");
         $result = $this->api->accessAdmin($token);
