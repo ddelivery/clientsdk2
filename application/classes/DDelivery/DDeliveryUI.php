@@ -253,6 +253,8 @@ class DDeliveryUI {
             $data = $e->getMessage();
             $data = array(['error' => $data]);
             $this->log->saveLog($e->getMessage());
+            echo $e->getMessage();
+            exit;
         }
         $this->postRender();
         echo  json_encode(array( 'success' => $success, 'data' => $data ));
@@ -305,6 +307,13 @@ class DDeliveryUI {
         $this->business = $business;
     }
 
+
+    public function actionLogin(){
+        if($this->checkToken()){
+            return 1;
+        }
+        return 0;
+    }
 
     /**
      * @param Storage\LogStorageInterface $log

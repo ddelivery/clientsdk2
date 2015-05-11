@@ -11,6 +11,7 @@ namespace DDelivery\Adapter;
 
 use DDelivery\DB\ConnectInterface;
 use DDelivery\DDeliveryException;
+use DDelivery\Utils;
 use PDO;
 
 abstract class Adapter {
@@ -88,7 +89,9 @@ abstract class Adapter {
         $this->params = $params;
     }
 
-
+    public function getEnterPoint(){
+        return Utils::fullUrl($_SERVER, false);
+    }
 
     public function getPathByDB(){
         return '../db/db.sqlite';
