@@ -83,9 +83,9 @@ class Container {
             $pdo = $adapter->getDb();
             $config = $adapter->getDbConfig();
             $setting = new LogStorageDB($pdo, $config['type'], $config['prefix']);
-            $this->shared['setting'] = $setting;
+            $this->shared['log'] = $setting;
         }
-        return $this->shared['setting'];
+        return $this->shared['log'];
     }
 
     /**
