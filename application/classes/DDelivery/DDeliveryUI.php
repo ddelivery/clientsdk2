@@ -36,6 +36,7 @@ class DDeliveryUI {
 
 
     public function actionDefault(){
+        throw new DDeliveryException("Not Found");
         return 1;
     }
 
