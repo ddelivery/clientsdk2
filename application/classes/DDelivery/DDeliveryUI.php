@@ -202,7 +202,7 @@ class DDeliveryUI {
             }
         }else{
             throw new DDeliveryException("Для входа в админ панель
-                                            необходимо быть администратором CMS");
+                                            необходимо быть администратором");
         }
         throw new DDeliveryException("Ошибка входа в админ панель");
     }

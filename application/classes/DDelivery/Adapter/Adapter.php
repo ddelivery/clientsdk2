@@ -303,7 +303,7 @@ abstract class Adapter {
                                 "name" => self::PARAM_PAYMENT_LIST,
                                 "items" => $this->getCmsPaymentList(),
                                 "default" => 0,
-                                "data_type" => array("int", "string", "email"),
+                                "data_type" => array("int"),
                                 "required" => 1
                             ),
                             array(
@@ -312,7 +312,7 @@ abstract class Adapter {
                                 "name" => self::PARAM_STATUS_LIST,
                                 "items" => $this->getCmsOrderStatusList(),
                                 "default" => 0,
-                                "data_type" => array("int", "string", "email"),
+                                "data_type" => array("int"),
                                 "required" => 1
                             )
         );
