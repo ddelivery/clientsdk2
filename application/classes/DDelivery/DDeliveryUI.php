@@ -146,9 +146,11 @@ class DDeliveryUI {
      */
     public function actionPush(){
         if(!empty($this->request['status'])){
-            return $this->adapter->changeStatus($this->request['status']);
+            if( $this->adapter->changeStatus($this->request['status'])){
+                return 1;
+            }
         }
-        return 1;
+        return 0;
     }
 
 
