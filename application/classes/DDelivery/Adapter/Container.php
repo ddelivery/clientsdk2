@@ -13,6 +13,7 @@ use DDelivery\Business\Business;
 use DDelivery\DDeliveryException;
 use DDelivery\DDeliveryUI;
 use DDelivery\Server\Api;
+use DDelivery\Server\CurlProvider;
 use DDelivery\Storage\LogStorageDB;
 use DDelivery\Storage\LogStorageInterface;
 use DDelivery\Storage\OrderStorageDB;
@@ -83,9 +84,9 @@ class Container {
             $pdo = $adapter->getDb();
             $config = $adapter->getDbConfig();
             $setting = new LogStorageDB($pdo, $config['type'], $config['prefix']);
-            $this->shared['setting'] = $setting;
+            $this->shared['log'] = $setting;
         }
-        return $this->shared['setting'];
+        return $this->shared['log'];
     }
 
     /**
@@ -147,7 +148,9 @@ class Container {
     public function getApi(){
         if(!isset($this->shared['api'])){
             $adapter = $this->getAdapter();
-            $api = new Api($adapter->getApiKey(), $adapter->getSdkServer());
+            $curlProvider = new  CurlProvider();
+            $curlProvider->referrer = $adapter->getEnterPoint();
+            $api = new Api($adapter->getApiKey(), $adapter->getSdkServer(), $curlProvider);
             $this->shared['api'] = $api;
         }
         return $this->shared['api'];

@@ -222,13 +222,11 @@ class Business {
      */
     public function renderAdmin(){
         $token = $this->generateToken();
-
         if(empty($token))
             throw new DDeliveryException("Ошибка генерции токена");
         $result = $this->api->accessAdmin($token);
-
         if( isset($result['success']) && ($result['success'] == 1) ){
-            return $result['token'];
+            return $result['data'];
         }
         return null;
     }
@@ -244,7 +242,7 @@ class Business {
 
         $result = $this->api->pushCart($cart);
         if( isset($result['success']) && $result['success'] == 1 ){
-            return $result['token'];
+            return $result['data'];
         }
         return null;
     }

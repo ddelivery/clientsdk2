@@ -12,16 +12,18 @@ use DDelivery\Utils;
 
 class CurlProvider {
 
-    public static function getCurl(){
+    public $referrer;
+
+    public function getCurl(){
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_REFERER, Utils::fullUrl($_SERVER, false));
+        curl_setopt($curl, CURLOPT_REFERER, $this->referrer);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($curl, CURLOPT_HEADER, 0);
         return $curl;
     }
 
 
-    public static function processJson($url, $params){
+    public function processJson($url, $params){
         $curl = self::getCurl();
         //$headers= array('Accept: application/json','Content-Type: application/json');
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -34,7 +36,7 @@ class CurlProvider {
     }
 
 
-    public static function processPost($url, $params){
+    public function processPost($url, $params){
         $curl = self::getCurl();
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_POST, true);
@@ -46,7 +48,7 @@ class CurlProvider {
 
 
 
-    public static function processGet($url, $params){
+    public function processGet($url, $params){
 
         $curl = self::getCurl();
         $url = $url . '?' .http_build_query($params);

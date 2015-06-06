@@ -15,9 +15,15 @@ class Api {
 
     public $apiServer;
 
-    public function __construct($apiKey, $apiServer){
+    /**
+     * @var CurlProvider
+     */
+    public $curlProvider;
+
+    public function __construct($apiKey, $apiServer, $curlProvider){
         $this->apiKey = $apiKey;
         $this->apiServer = $apiServer;
+        $this->curlProvider = $curlProvider;
     }
 
     /**
@@ -28,7 +34,7 @@ class Api {
         $params = array(
              'token' => $token
         );
-        return (array)CurlProvider::processGet($this->getUrl('passport', 'handshake'), $params);
+        return (array)$this->curlProvider->processGet($this->getUrl('passport', 'handshake'), $params);
     }
 
     public function sendOrder( $sdkId, $cmsId, $payment_variant, $status, $payment_price ){
@@ -40,14 +46,14 @@ class Api {
             'payment_price' => $payment_price
         );
 
-        return (array)CurlProvider::processPost($this->getUrl('order', 'send'), $params);
+        return (array)$this->curlProvider->processPost($this->getUrl('order', 'send'), $params);
     }
 
     public function viewOrder($sdkId){
         $params = array(
             'id' => $sdkId
         );
-        return (array)CurlProvider::processPost($this->getUrl('order', 'view'), $params);
+        return (array)$this->curlProvider->processPost($this->getUrl('order', 'view'), $params);
     }
 
     public function editOrder($sdkId, $cmsId, $payment_variant, $status){
@@ -57,7 +63,7 @@ class Api {
             'payment_variant' => $payment_variant,
             'local_status' => $status,
         );
-        return (array)CurlProvider::processPost($this->getUrl('order', 'edit'), $params);
+        return (array)$this->curlProvider->processPost($this->getUrl('order', 'edit'), $params);
     }
 
     public function accessAdmin($token){
@@ -65,11 +71,11 @@ class Api {
         $params = array(
             'token' => $token
         );
-        return (array)CurlProvider::processGet($this->getUrl('passport', 'auth'), $params);
+        return (array)$this->curlProvider->processGet($this->getUrl('passport', 'auth'), $params);
     }
 
     public function pushCart( array $cart ){
-        return (array)CurlProvider::processJson($this->getUrl('passport', 'shop'), $cart);
+        return (array)$this->curlProvider->processJson($this->getUrl('passport', 'shop'), $cart);
     }
 
 

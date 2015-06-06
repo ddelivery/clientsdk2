@@ -11,6 +11,7 @@ namespace DDelivery\Adapter;
 
 use DDelivery\DB\ConnectInterface;
 use DDelivery\DDeliveryException;
+use DDelivery\Utils;
 use PDO;
 
 abstract class Adapter {
@@ -88,7 +89,9 @@ abstract class Adapter {
         $this->params = $params;
     }
 
-
+    public function getEnterPoint(){
+        return Utils::fullUrl($_SERVER, false);
+    }
 
     public function getPathByDB(){
         return '../db/db.sqlite';
@@ -300,7 +303,7 @@ abstract class Adapter {
                                 "name" => self::PARAM_PAYMENT_LIST,
                                 "items" => $this->getCmsPaymentList(),
                                 "default" => 0,
-                                "data_type" => array("int", "string", "email"),
+                                "data_type" => array("int"),
                                 "required" => 1
                             ),
                             array(
@@ -309,7 +312,7 @@ abstract class Adapter {
                                 "name" => self::PARAM_STATUS_LIST,
                                 "items" => $this->getCmsOrderStatusList(),
                                 "default" => 0,
-                                "data_type" => array("int", "string", "email"),
+                                "data_type" => array("int"),
                                 "required" => 1
                             )
         );
