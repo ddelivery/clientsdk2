@@ -123,9 +123,11 @@ class DDeliveryUI {
      * @throws DDeliveryException
      */
     public function actionVersion(){
-        return array( 'version' => $this->adapter->getCmsVersion(),
-            'cms' => $this->adapter->getCmsName(),
-            'sdk' => Adapter::SDK_VERSION);
+        return array(
+                      'version' => $this->adapter->getCmsVersion(),
+                      'cms' => $this->adapter->getCmsName(),
+                      'sdk' => Adapter::SDK_VERSION
+        );
     }
 
 
@@ -164,6 +166,25 @@ class DDeliveryUI {
             }
         }
         return 0;
+    }
+
+
+    /**
+     *
+     * Перейти к форме оформления заказа
+     *
+     * @throws DDeliveryException
+     */
+    public function actionModule(){
+        $cart = $this->adapter->getCartAndDiscount();
+        $token = $this->business->renderModuleToken($cart);
+        if($token){
+            $url = $this->adapter->getSdkServer() . 'delivery/' . $token . '/index.json';
+            $params = http_build_query($this->adapter->getUserParams($this->request));
+            $url .= (empty($params))?'':'?' . $params;
+            $this->setRedirect($url);
+        }
+        throw new DDeliveryException("Ошибка входа в магазин");
     }
 
 
