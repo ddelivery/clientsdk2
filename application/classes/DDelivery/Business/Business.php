@@ -84,16 +84,19 @@ class Business {
      * Визивается при окончании оформления заказа
      * для привязки заказа на стороне цмс и на стороне сервера
      *
-     * @param $sdkId
-     * @param $cmsId
-     * @param $payment
-     * @param $status
+     * @param $sdkId - идентификатор на сервере полученный при оформлении заказа
+     * @param $cmsId - идентификатор заказа в CMS
+     * @param $payment - вариант оплаты(идентификатор)
+     * @param $status - статус заказа(идентификатор)
+     * @param $to_name - имя покупателя
+     * @param $to_phone - телефон покупателя
+     * @param $to_email - email покупателя
      * @return bool
      */
-    public function onCmsOrderFinish($sdkId, $cmsId, $payment, $status){
+    public function onCmsOrderFinish($sdkId, $cmsId, $payment, $status, $to_name, $to_phone, $to_email){
         $id = $this->orderStorage->saveOrder($sdkId, $cmsId, $payment, $status);
         if( !empty($id)  ){
-            $result = $this->api->editOrder($sdkId, $cmsId, $payment, $status);
+            $result = $this->api->editOrder($sdkId, $cmsId, $payment, $status, $to_name, $to_phone, $to_email);
             if( isset($result['success']) && $result['success'] == 1 && !empty($result['data']['order_id']) ){
                 return $result['data']['order_id'];
             }
@@ -121,19 +124,36 @@ class Business {
      *
      * Отправить заказ  на DDelivery.ru
      *
-     * @param $sdkId
-     * @param $cmsId
-     * @param $payment
-     * @param $status
+     * @param $sdkId - идентификатор на сервере полученный при оформлении заказа
+     * @param $cmsId - идентификатор заказа в CMS
+     * @param $payment - вариант оплаты(идентификатор)
+     * @param $status - статус заказа(идентификатор)
+     * @param $to_name - имя покупателя
+     * @param $to_phone - телефон покупателя
+     * @param $to_email - email покупателя
+     * @param null $payment_price - наложенный платеж,
+     * по умолчанию берется из значения параметра настроек варианта оплаты,
+     * но возможно выставлять и вручную
      * @return int
-     * @throws \DDelivery\DDeliveryException
+     * @throws DDeliveryException
      */
-    public function cmsSendOrder($sdkId, $cmsId, $payment, $status){
+    public function cmsSendOrder($sdkId, $cmsId, $payment, $status, $to_name,
+                                 $to_phone, $to_email, $payment_price = null){
         $order = $this->orderStorage->getOrder($cmsId);
         if( count($order) && $order['ddelivery_id'] == 0 ){
-            if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
-                $payment_price = 1;
-            $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status, $payment_price);
+
+            // Разбор с наложенным платежем
+            if($payment_price === null){
+                if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
+                    $payment_price = 1;
+                else
+                    $payment_price = 0;
+            }else{
+                $payment_price = (int)$payment_price;
+            }
+
+            $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status, $payment_price, $to_name,
+                                            $to_phone, $to_email);
             if( isset($result['success']) && $result['success'] == 1 ){
                 $ddelivery_id = $result['data']['ddelivery_id'];
                 $this->orderStorage->saveOrder($sdkId, $cmsId, $payment, $status,
@@ -150,27 +170,35 @@ class Business {
         return 0;
     }
 
+
+
+
     /**
-     * Визивается при смене статуса заказа,
-     * если статус заказа соответствует статусу указанному в настройках
+     * Вызывается при смене статуса заказа, если статус заказа соответствует
+     * статусу указанному в настройках
      * то заказ отправляется на сервер DDelivery.ru
      *
      *
-     * @param $sdkId
-     * @param $cmsId
-     * @param $payment
-     * @param $status
-     * @throws \DDelivery\DDeliveryException
+     * @param $sdkId - идентификатор на сервере полученный при оформлении заказа
+     * @param $cmsId - идентификатор заказа в CMS
+     * @param $payment - вариант оплаты(идентификатор)
+     * @param $status - статус заказа(идентификатор)
+     * @param $to_name - имя покупателя
+     * @param $to_phone - телефон покупателя
+     * @param $to_email - email покупателя
+     *
      * @return int
+     * @throws DDeliveryException
      */
-    public function onCmsChangeStatus($sdkId, $cmsId, $payment, $status){
+    public function onCmsChangeStatus($sdkId, $cmsId, $payment, $status, $to_name, $to_phone, $to_email){
         $order = $this->orderStorage->getOrder($cmsId);
         if( count($order) && $order['ddelivery_id'] == 0 ){
             if($this->settingStorage->getParam(Adapter::PARAM_STATUS_LIST) == $status){
                 $payment_price = 0;
                 if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
                     $payment_price = 1;
-                $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status, $payment_price);
+                $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status, $payment_price,
+                                                $to_name, $to_phone, $to_email);
                 if( isset($result['success']) && $result['success'] == 1 ){
                     $ddelivery_id = $result['data']['ddelivery_id'];
                     $this->orderStorage->saveOrder($sdkId, $cmsId, $payment, $status,
@@ -224,6 +252,7 @@ class Business {
         $token = $this->generateToken();
         if(empty($token))
             throw new DDeliveryException("Ошибка генерции токена");
+
         $result = $this->api->accessAdmin($token);
         if( isset($result['success']) && ($result['success'] == 1) ){
             return $result['data'];

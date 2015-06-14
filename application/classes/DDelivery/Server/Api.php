@@ -37,18 +37,46 @@ class Api {
         return (array)$this->curlProvider->processGet($this->getUrl('passport', 'handshake'), $params);
     }
 
-    public function sendOrder( $sdkId, $cmsId, $payment_variant, $status, $payment_price ){
+
+    /**
+     *
+     * Отправляем заказ на сервер DDelivery.ru
+     *
+     * @param $sdkId - идентификатор на сервере полученный при оформлении заказа
+     * @param $cmsId - идентификатор заказа в CMS
+     * @param $payment_variant - вариант оплаты(идентификатор)
+     * @param $status - статус заказа(идентификатор)
+     * @param $payment_price - наложенный платеж [0,1](нет, да)
+     * @param $to_name - имя покупателя
+     * @param $to_phone - телефон покупателя
+     * @param $to_email - email покупателя
+     *
+     * @return array
+     */
+    public function sendOrder( $sdkId, $cmsId, $payment_variant, $status,
+                               $payment_price, $to_name, $to_phone, $to_email ){
         $params = array(
             'id' => $sdkId,
             'shop_refnum' => $cmsId,
             'payment_variant' => $payment_variant,
             'local_status' => $status,
-            'payment_price' => $payment_price
+            'payment_price' => $payment_price,
+            'to_name' => $to_name,
+            'to_phone' => $to_phone,
+            'to_email' => $to_email
         );
 
         return (array)$this->curlProvider->processPost($this->getUrl('order', 'send'), $params);
     }
 
+
+
+    /**
+     * Получить информацию о заказе
+     *
+     * @param $sdkId
+     * @return array
+     */
     public function viewOrder($sdkId){
         $params = array(
             'id' => $sdkId
@@ -56,12 +84,31 @@ class Api {
         return (array)$this->curlProvider->processPost($this->getUrl('order', 'view'), $params);
     }
 
-    public function editOrder($sdkId, $cmsId, $payment_variant, $status){
+
+    /**
+     *
+     * Редактируем заказ на сервере сдк
+     *
+     * @param $sdkId - идентификатор на сервере полученный при оформлении заказа
+     * @param $cmsId - идентификатор заказа в CMS
+     * @param $payment_variant - вариант оплаты(идентификатор)
+     * @param $status - статус заказа(идентификатор)
+     * @param $to_name - имя покупателя
+     * @param $to_phone - телефон покупателя
+     * @param $to_email - email покупателя
+     *
+     * @return array
+     */
+    public function editOrder($sdkId, $cmsId, $payment_variant, $status,
+                              $to_name, $to_phone, $to_email){
         $params = array(
             'id' => $sdkId,
             'shop_refnum' => $cmsId,
             'payment_variant' => $payment_variant,
             'local_status' => $status,
+            'to_name' => $to_name,
+            'to_phone' => $to_phone,
+            'to_email' => $to_email
         );
         return (array)$this->curlProvider->processPost($this->getUrl('order', 'edit'), $params);
     }
