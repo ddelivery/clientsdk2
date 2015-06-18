@@ -184,7 +184,7 @@ class DDeliveryUI {
             $url .= (empty($params))?'':'?' . $params;
             $this->setRedirect($url);
         }
-        throw new DDeliveryException("Ошибка входа в магазин");
+        throw new DDeliveryException("Ошибка вывода модуля");
     }
 
 
