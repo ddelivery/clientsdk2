@@ -141,7 +141,6 @@ class Business {
                                  $to_phone, $to_email, $payment_price = null){
         $order = $this->orderStorage->getOrder($cmsId);
         if( count($order) && $order['ddelivery_id'] == 0 ){
-
             // Разбор с наложенным платежем
             if($payment_price === null){
                 if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)

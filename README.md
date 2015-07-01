@@ -364,8 +364,8 @@ clientPrice: 23.85 - Цена доставки
 company: "44" - ID компании доставки
 js: "change" -
 orderId: 9 - sdkId
-payment: true - возможность наложенного платежа
-type: 2 - тип доставки (1-ПВЗ, 2-курьер)
+payment: 1|| 0 - возможность наложенного платежа
+type: 2 - тип доставки (1-ПВЗ, 2-курьер,3 - почта)
 userInfo:
     comment: "xxxxxx" - комментарий
     email: "dddddddddd@xxxxxx.xxx" - email
@@ -381,7 +381,8 @@ userInfo:
 
 6. При окончании оформления заказа
 -----------------------------------------
-В момент когда цмс вставляет в БД заказ и выбран способ оплаты клиентом необходимо вызвать метод  необходимо вызвать метод onCmsOrderFinish класса Business
+В момент когда цмс вставляет в БД заказ и выбран способ оплаты клиентом
+необходимо вызвать метод  необходимо вызвать метод onCmsOrderFinish класса Business
 ```
 $adapter = new IntegratorAdapter();
 $container = new Container(array('adapter' => $adapter));
@@ -389,7 +390,8 @@ $business = $container->getBusiness();
 //$payment - id способа оплаты
 //$status - id статуса заказа
 //$cmsId - id заказа в CMS
-$business->onCmsOrderFinish($sdkId, $cmsId, $payment, $status)
+$business->onCmsOrderFinish($sdkId, $cmsId, $payment, $status,
+                            $to_name, $to_phone, $to_email)
 ```
 
 7.При сохранении заказа перепроверить валидность данных доставки
@@ -409,7 +411,8 @@ $business->getOrder($sdkId)
 $adapter = new IntegratorAdapter();
 $container = new Container(array('adapter' => $adapter));
 $business = $container->getBusiness();
-$business->cmsSendOrder($sdkId, $cmsId, $payment, $status);
+$business->cmsSendOrder($sdkId, $cmsId, $payment, $status,
+                        $to_name, $to_phone, $to_email);
 ```
 
 Что еще может  пригодится
