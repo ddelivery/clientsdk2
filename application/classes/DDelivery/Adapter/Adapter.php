@@ -47,38 +47,38 @@ abstract class Adapter {
     /**
      * Поле ФИО
      */
-    const USER_FIELD_NAME = 'name';
+    const USER_FIELD_NAME = 'to_name';
 
     /**
      * Поле email
      */
-    const USER_FIELD_EMAIL  = 'email';
+    const USER_FIELD_EMAIL  = 'to_email';
 
     /**
      * Поле телефон
      */
-    const USER_FIELD_PHONE  = 'phone';
+    const USER_FIELD_PHONE  = 'to_phone';
 
     /**
      * Поле улица
      */
-    const USER_FIELD_STREET  = 'street';
+    const USER_FIELD_STREET  = 'to_street';
 
 
     /**
      * Поле дом
      */
-    const USER_FIELD_HOUSE  = 'house';
+    const USER_FIELD_HOUSE  = 'to_house';
 
     /**
      * Поле Квартира
      */
-    const USER_FIELD_FLAT = 'flat';
+    const USER_FIELD_FLAT = 'to_flat';
 
     /**
      * Поле индекс
      */
-    const USER_FIELD_ZIP  = 'zip';
+    const USER_FIELD_ZIP  = 'to_zip';
 
     /**
      * Поле комментарий

@@ -21,12 +21,11 @@ class IntegratorAdapter extends Adapter  {
      * @return string
      */
     public function getApiKey(){
-        return '584ac2d4ef3daa60b297a820385e1c70';
-        //throw new DDeliveryException("Запустить апи ");
+        return '852af44bafef22e96d8277f3227f0998';
     }
 
     public function getPathByDB(){
-        return '../db/db.sqlite';
+        return 'db.sqlite';
     }
 
     /**
@@ -162,9 +161,6 @@ class IntegratorAdapter extends Adapter  {
      */
     public function getUserParams($request){
         return array(
-            self::USER_FIELD_NAME => 'Сидоров Сережа',
-            self::USER_FIELD_EMAIL => 'syd@email.com',
-            self::USER_FIELD_PHONE => '79225551234',
             self::USER_FIELD_STREET => 'Цветаевой',
             self::USER_FIELD_COMMENT => 'Комментарий',
             self::USER_FIELD_HOUSE => '2а',
@@ -191,9 +187,9 @@ class IntegratorAdapter extends Adapter  {
     public function getProductCart(){
         return array(
                     array(
-                        "id"=>12,
-                        "name"=>"Веселый клоун",
-                        "width"=>10,
+                        "id"    =>  12,
+                        "name"  =>  "Веселый клоун",
+                        "width" =>  10,
                         "height"=>10,
                         "length"=>10,
                         "weight"=>1,

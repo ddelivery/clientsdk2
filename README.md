@@ -15,6 +15,7 @@ clientSDK для быстрой разработки клиентских реш
 example/IntegratorAdapter.php - класс в котором необходимо переопрелить указанные методы, является связующим свеном между clientSdk и CMS
 example/ajax.php - файл который является точкой входа в CMS и запускает на выполнение clientSDK
 example/index.php - пример кнопки для открытия модуля  на странице оформления заказа
+example/db.sqlite - хранилище которое использует сдк
 
 Запустите файл index.php в директории example/, для запуска примера достаточно использовать тестовый апи ключ.
 Из коробки пример работы модуля должен запустится корректно, в дальнейшем при разработке
@@ -189,9 +190,6 @@ public function getOrders($from, $to){
 ```
 public function getUserParams($request){
     return array(
-                self::USER_FIELD_NAME => 'Сидоров Сережа',
-                self::USER_FIELD_EMAIL => 'syd@email.com',
-                self::USER_FIELD_PHONE => '79225551234',
                 self::USER_FIELD_STREET => 'Цветаевой',
                 self::USER_FIELD_COMMENT => 'Комментарий',
                 self::USER_FIELD_HOUSE => '2а',
@@ -313,48 +311,52 @@ $business->initStorage();
 -----------------------------------------
 Для этого на страницу оформления заказа нужно подключить скрипт
 ```
-<script src="http://devsdk.ddelivery.ru/js/ddelivery.js?10"></script>
+<script src="http://sdk.ddelivery.ru/assets/js/ddelivery_v2.js"></script>
 ```
-После подключения будет в js доступен объект DDeliveryIntegration,
+После подключения будет в js доступен объект DDeliveryModule,
 он позволяет открывать окно выбора точки доставки
-сначала нужно переопределить хуки на закрытие модуля и окончание оформление доставки
+
 ```
-    DDeliveryIntegration.onOpen = function(){
-        alert("Хук на открытие окна");
-    };
-    DDeliveryIntegration.onChange = function(data){
-        alert("Хук на окончание оформления заказа и обработка результата");
-        console.log(data);
-    };
-    DDeliveryIntegration.onClose = function(data){
-        alert("Хук на закрытие окна");
-        console.log(data);
-    };
+    DDeliveryModule.init(params, callbacks, 'ddelivery_container_place');
+    params - параметры модуля, например:
+    {
+            url: 'ajax.php?action=module', // - в url скрипта, можно добавлять дополнительные поля, например поля пользователя, для  того чтобы
+                                           // можно было автоматически заполнять поля в окне выбора доставки
+            width: 550,
+            height: 440,
+            city:151184, // город
+            type: 1 // 1 - пвз, 2 - курьер, 3 - почта
+    }
+
+    callbacks = {
+            open: function(){
+                //alert("Хук на открытие окна");
+                console.log("Хук на открытие окна");
+                // если false окно  не откроется
+                return true;
+            },
+            change: function(data){
+                console.log(data);
+                console.log("Хук на окончание оформления заказа и обработка результата");
+            },
+            close_map: function(data){
+                console.log('xxxx');
+                console.log("Хук на закрытие карты");
+            },
+            price: function(data){
+                console.log("Хук изменение цены, и получение возможности НПП текущей компании");
+                console.log(data);
+            }
+
+    }
+
 ```
-это позволит получать результат оформления доставки и прорабатывать его
+это позволит получать результат оформления доставки и обрабатывать его
 
 Далее необходимо определить событие для открытия окна выбора доставки:
 ```
-<a href="javascript:void(0)" id="select_way" class="trigger">Выбрать точку доставки</a>
-<script>
-    var select_way = document.getElementById("select_way");
-    var params = {
-            url: 'ajax.php?action=shop',
-            width: 1000,
-            height: 650
-    };
-    select_way.onclick = function(){
-            DDeliveryIntegration.openPopup(params);
-    };
-</script>
-```
-Главное правильно сконфигурировать объект params:
-url - в url скрипта, можно добавлять дополнительные поля, например поля пользователя, для  того чтобы
- можно было автоматически заполнять поля в окне выбора доставки
-width - ширина окна выбора доставки
-height - высота окна выбора доставки
 
-При окончании оформления доставки в метод DDeliveryIntegration.onChange присылаются данные
+При окончании оформления доставки во время хука  change(см. параметр callbacks) присылаются данные
 с информацией про доставку в виде js объекта
 ```
 city: "г. Москва" - Город доставки

@@ -8,7 +8,8 @@ header('Content-Type: text/html; charset=utf-8');
  */
 use DDelivery\Adapter\Container;
 
-//error_reporting(E_ALL);
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 
 require(implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', 'application','bootstrap.php')));
 require('IntegratorAdapter.php');
