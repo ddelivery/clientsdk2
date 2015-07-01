@@ -411,7 +411,8 @@ $business->getOrder($sdkId)
 $adapter = new IntegratorAdapter();
 $container = new Container(array('adapter' => $adapter));
 $business = $container->getBusiness();
-$business->cmsSendOrder($sdkId, $cmsId, $payment, $status, $to_name, $to_phone, $to_email);
+$business->cmsSendOrder($sdkId, $cmsId, $payment, $status,
+                        $to_name, $to_phone, $to_email);
 ```
 
 Что еще может  пригодится
