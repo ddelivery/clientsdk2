@@ -418,8 +418,10 @@ $business->cmsSendOrder($sdkId, $cmsId, $payment, $status, $to_name, $to_phone, 
 Что еще может  пригодится
 --------------------------
 Можно сохранять дополнительные параметры для  настроек и использовать в контексте работы модуля,
-главное настроить поля в getCustomSettingsFields дочернего  класа Adapter. Эти поля будут показыватся в CAP, в разделе Настройки CMS
+главное настроить поля в getCustomSettingsFields дочернего  класа Adapter. Эти поля будут
+показыватся в CAP, в разделе Настройки CMS
 После нажатия кнопки Сохранить в CAP, в модуле будет доступен метод
+
 ```
 $adapter = new IntegratorAdapter();
 $container = new Container(array('adapter' => $adapter));
