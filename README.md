@@ -407,12 +407,12 @@ $business->getOrder($sdkId)
 -------------------------------------------------------
 событию вызвать метод cmsSendOrder класса Business, вызов этого метода отсылает заявку на сервер ddelivery.ru,
 для организации забора товара из магазина
+
 ```
 $adapter = new IntegratorAdapter();
 $container = new Container(array('adapter' => $adapter));
 $business = $container->getBusiness();
-$business->cmsSendOrder($sdkId, $cmsId, $payment, $status,
-                        $to_name, $to_phone, $to_email);
+$business->cmsSendOrder($sdkId, $cmsId, $payment, $status, $to_name, $to_phone, $to_email);
 ```
 
 Что еще может  пригодится
