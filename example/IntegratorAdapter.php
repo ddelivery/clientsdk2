@@ -160,6 +160,8 @@ class IntegratorAdapter extends Adapter  {
      * @return array
      */
     public function getUserParams($request){
+        return parent::getUserParams($request);
+        /*
         return array(
             self::USER_FIELD_STREET => 'Цветаевой',
             self::USER_FIELD_COMMENT => 'Комментарий',
@@ -167,6 +169,7 @@ class IntegratorAdapter extends Adapter  {
             self::USER_FIELD_FLAT => '123',
             self::USER_FIELD_ZIP => '10101'
         );
+        */
     }
 
     /**

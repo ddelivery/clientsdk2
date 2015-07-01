@@ -216,7 +216,9 @@ abstract class Adapter {
      * @param $request
      * @return array
      */
-    abstract  public function getUserParams( $request );
+    public function getUserParams( $request ){
+        return $request;
+    }
 
 
     /**
