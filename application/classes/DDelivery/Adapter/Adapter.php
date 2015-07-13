@@ -239,13 +239,11 @@ abstract class Adapter {
 
 
     /**
-     *
      * Получить скидку
-     *
      * @return float
      */
     public function getAdminDiscount(){
-        $this->getProductCart();
+        $this->getDiscount();
     }
 
     /**
@@ -254,7 +252,7 @@ abstract class Adapter {
      * @return array
      */
     public function getAdminProductCart(){
-        $this->getDiscount();
+        $this->getProductCart();
     }
 
     /**
