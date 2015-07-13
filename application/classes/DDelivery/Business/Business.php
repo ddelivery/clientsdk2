@@ -93,29 +93,32 @@ class Business {
      * @param $to_email - email покупателя
      * @return bool
      */
-    public function onCmsOrderFinish($sdkId, $cmsId, $payment, $status, $to_name, $to_phone, $to_email){
+     public function onCmsOrderFinish($sdkId, $cmsId, $payment, $status, $to_name, $to_phone, $to_email){
         $id = $this->orderStorage->saveOrder($sdkId, $cmsId, $payment, $status);
         if( !empty($id)  ){
             $result = $this->api->editOrder($sdkId, $cmsId, $payment, $status, $to_name, $to_phone, $to_email);
-            if( isset($result['success']) && $result['success'] == 1 && !empty($result['data']['order_id']) ){
-                return $result['data']['order_id'];
+            if( isset($result['success']) && $result['success'] == 1 && !empty($result['data']['id']) ){
+                return $result['data']['id'];
             }
         }
         return false;
     }
 
 
+
     /**
      *
-     * Получить заказ по Id
+     * Получить информацию о заказе по сдк ID
      *
      * @param $sdkId
      * @return array
      */
-    public function getOrder($sdkId){
-        $order = $this->orderStorage->getOrderBySdkId((int)$sdkId);
-        if( count( $order )){
-            return $order;
+    public function viewOrder($sdkId){
+        if(!empty($sdkId)){
+            $result = $this->api->viewOrder($sdkId);
+            if( isset($result['success']) && ($result['success'] == 1) && (!empty($result['data']['id'])) ){
+                return $result['data'];
+            }
         }
         return [];
     }
@@ -141,6 +144,7 @@ class Business {
                                  $to_phone, $to_email, $payment_price = null){
         $order = $this->orderStorage->getOrder($cmsId);
         if( count($order) && $order['ddelivery_id'] == 0 ){
+
             // Разбор с наложенным платежем
             if($payment_price === null){
                 if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
@@ -259,6 +263,24 @@ class Business {
         return null;
     }
 
+
+    /**
+     *
+     * Получить токен редактирования заказа
+     *
+     * @param $cart
+     * @param $id
+     * @return null
+     */
+    public function renderEditOrderToken($cart, $id){
+        $result = $this->api->pushOrderEditCart($cart, $id);
+        if( isset($result['success']) && $result['success'] == 1 ){
+            return $result['data'];
+        }
+        return null;
+    }
+
+
     /**
      *
      * Получить токен для показа модуля
@@ -267,7 +289,6 @@ class Business {
      * @return null
      */
     public function renderModuleToken($cart){
-
         $result = $this->api->pushCart($cart);
         if( isset($result['success']) && $result['success'] == 1 ){
             return $result['data'];
@@ -362,5 +383,20 @@ class Business {
      */
     public function getLog(){
         return $this->log;
+    }
+
+    /**
+     *
+     * Получить заказ по Id
+     *
+     * @param $sdkId
+     * @return array
+     */
+    public function getOrder($sdkId){
+        $order = $this->orderStorage->getOrderBySdkId((int)$sdkId);
+        if( count( $order )){
+            return $order;
+        }
+        return [];
     }
 } 

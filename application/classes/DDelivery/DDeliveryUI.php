@@ -36,7 +36,7 @@ class DDeliveryUI {
 
 
     public function actionDefault(){
-        throw new DDeliveryException("Not Found");
+        //throw new DDeliveryException("Not Found");
         return 1;
     }
 
@@ -169,6 +169,32 @@ class DDeliveryUI {
     }
 
 
+
+    /**
+     *
+     * Редактировать заказ
+     *
+     * @throws DDeliveryException
+     */
+    public function actionEdit(){
+
+        if($this->adapter->isAdmin()){
+            $cart = $this->adapter->getAdminCartAndDiscount();
+            $token = $this->business->renderEditOrderToken($cart, (int)$this->request['id']);
+
+            if($token){
+                $url = $this->adapter->getSdkServer() . 'delivery/' . $token . '/edit.json';
+                $params = http_build_query($this->adapter->getUserParams($this->request));
+                $url .= (empty($params))?'':'?' . $params;
+                $this->setRedirect($url);
+            }
+        }else{
+            throw new DDeliveryException("Для редактирвания заказа необходимо быть администратором");
+        }
+        throw new DDeliveryException("Ошибка входа в админ панель");
+    }
+
+
     /**
      *
      * Перейти к форме оформления заказа
@@ -183,6 +209,7 @@ class DDeliveryUI {
             $params = http_build_query($this->adapter->getUserParams($this->request));
             $url .= (empty($params))?'':'?' . $params;
             $this->setRedirect($url);
+            return;
         }
         throw new DDeliveryException("Ошибка вывода модуля");
     }
@@ -291,7 +318,9 @@ class DDeliveryUI {
      * @return bool
      */
     public function checkToken(){
+
         if(isset($this->request['api_key']) && isset($this->request['token'])){
+
             if($this->business->checkToken($this->request['token'])
                         && $this->request['api_key'] == $this->adapter->getApiKey())
                 return true;

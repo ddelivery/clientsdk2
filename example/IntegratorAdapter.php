@@ -1,18 +1,13 @@
 <?php
 use DDelivery\Adapter\Adapter;
 use DDelivery\DDeliveryException;
-
 /**
  * Created by PhpStorm.
  * User: mrozk
  * Date: 4/11/15
  * Time: 2:53 PM
  */
-
 class IntegratorAdapter extends Adapter  {
-
-
-
     /**
      *
      * Получить апи ключ
@@ -23,11 +18,9 @@ class IntegratorAdapter extends Adapter  {
     public function getApiKey(){
         return '852af44bafef22e96d8277f3227f0998';
     }
-
     public function getPathByDB(){
         return 'db.sqlite';
     }
-
     /**
      * Настройки базы данных
      * @return array
@@ -50,7 +43,6 @@ class IntegratorAdapter extends Adapter  {
             'prefix' => '',
         );
     }
-
     /**
      *
      * При синхронизации статусов заказов необходимо
@@ -65,7 +57,6 @@ class IntegratorAdapter extends Adapter  {
     public function changeStatus(array $orders){
         // TODO: Implement changeStatus() method.
     }
-
     /**
      * Получить урл апи сервера
      *
@@ -74,15 +65,12 @@ class IntegratorAdapter extends Adapter  {
     public function getSdkServer(){
         return self::SDK_SERVER_DEV_SDK;
     }
-
     public function getCmsName(){
         return 'CmsExample';
     }
-
     public function getCmsVersion(){
         return '1.1';
     }
-
     /**
      * Получить  заказ по id
      * ['city' => город назначения, 'payment' => тип оплаты, 'status' => статус заказа,
@@ -105,7 +93,6 @@ class IntegratorAdapter extends Adapter  {
             'delivery' => 220,
         );
     }
-
     /**
      * Получить список заказов за период
      * ['city' => город назначения, 'payment' => тип оплаты, 'status' => 'статус заказа'
@@ -119,39 +106,38 @@ class IntegratorAdapter extends Adapter  {
      */
     public function getOrders($from, $to){
         return array(
-                array(
-                    'city' => 'Урюпинск',
-                    'payment_id' => 22,
-                    'payment_name' => "Карточкой",
-                    'status_id' => 11,
-                    'status' => 'Статус',
-                    'date' => '2015.12.12',
-                    'sum' => 2200,
-                    'delivery' => 220,
-                ),
-                array(
-                    'city' => 'г. Москва, Московская область',
-                    'payment_id' => 22,
-                    'payment_name' => "Наличными",
-                    'status_id' => 11,
-                    'status' => 'Отгружен',
-                    'date' => '2015.13.14',
-                    'sum' => 2100,
-                    'delivery' => 120,
-                ),
-                array(
-                    'city' => 'Сити Питер',
-                    'payment_id' => 42,
-                    'payment_name' => "Рубли",
-                    'status_id' => 11,
-                    'status' => 'Отгружен',
-                    'date' => '2015.11.17',
-                    'sum' => 2100,
-                    'delivery' => 120,
-                )
+            array(
+                'city' => 'Урюпинск',
+                'payment_id' => 22,
+                'payment_name' => "Карточкой",
+                'status_id' => 11,
+                'status' => 'Статус',
+                'date' => '2015.12.12',
+                'sum' => 2200,
+                'delivery' => 220,
+            ),
+            array(
+                'city' => 'г. Москва, Московская область',
+                'payment_id' => 22,
+                'payment_name' => "Наличными",
+                'status_id' => 11,
+                'status' => 'Отгружен',
+                'date' => '2015.13.14',
+                'sum' => 2100,
+                'delivery' => 120,
+            ),
+            array(
+                'city' => 'Сити Питер',
+                'payment_id' => 42,
+                'payment_name' => "Рубли",
+                'status_id' => 11,
+                'status' => 'Отгружен',
+                'date' => '2015.11.17',
+                'sum' => 2100,
+                'delivery' => 120,
+            )
         );
     }
-
     /**
      *
      * Получить поля пользователя для отправки на серверное сдк
@@ -171,7 +157,6 @@ class IntegratorAdapter extends Adapter  {
         );
         */
     }
-
     /**
      * Получить скидку в рублях
      *
@@ -180,7 +165,6 @@ class IntegratorAdapter extends Adapter  {
     public function getDiscount(){
         return 0;
     }
-
     /**
      *
      * Получить содержимое корзини
@@ -189,21 +173,19 @@ class IntegratorAdapter extends Adapter  {
      */
     public function getProductCart(){
         return array(
-                    array(
-                        "id"    =>  12,
-                        "name"  =>  "Веселый клоун",
-                        "width" =>  10,
-                        "height"=>10,
-                        "length"=>10,
-                        "weight"=>1,
-                        "price"=>1110,
-                        "quantity"=>2,
-                        "sku"=>"app2"
-                    )
+            array(
+                "id"    =>  12,
+                "name"  =>  "Веселый клоун",
+                "width" =>  10,
+                "height"=>10,
+                "length"=>10,
+                "weight"=>1,
+                "price"=>1110,
+                "quantity"=>2,
+                "sku"=>"app2"
+            )
         );
     }
-
-
     /**
      * Получить массив с соответствием статусов DDelivery
      * @return array
@@ -211,7 +193,6 @@ class IntegratorAdapter extends Adapter  {
     public function getCmsOrderStatusList(){
         return array('10' => 'Завершен', '11' => 'Куплен');
     }
-
     /**
      * Получить массив со способами оплаты
      * @return array
@@ -219,7 +200,6 @@ class IntegratorAdapter extends Adapter  {
     public function getCmsPaymentList(){
         return array('14' => 'Наличными', '17' => 'Карточкой');
     }
-
     /***
      *
      * В этом участке средствами Cms проверить права доступа текущего пользователя,
@@ -231,8 +211,6 @@ class IntegratorAdapter extends Adapter  {
     public function isAdmin(){
         return true;
     }
-
-
     /**
      * Получить список кастомных полей в CAP
      *
@@ -240,24 +218,23 @@ class IntegratorAdapter extends Adapter  {
      */
     public function getCustomSettingsFields(){
         return array(
-                    array(
-                        "title" => "Название (Пример кастомного поля)",
-                        "type" => self::FIELD_TYPE_TEXT,
-                        "name" => "name",
-                        //"items" => getStatusList(),
-                        "default" => 0,
-                        "data_type" => array("string"),
-                        "required" => 1
-                    ),
-                    array(
-                         "title" => "Выводить способ доставки(Пример кастомного поля)",
-                         "type" => self::FIELD_TYPE_CHECKBOX,
-                         "name" => "checker",
-                         "default" => true,
-                         "data_type" => array("int"),
-                         "required" => 1
-                    )
+            array(
+                "title" => "Название (Пример кастомного поля)",
+                "type" => self::FIELD_TYPE_TEXT,
+                "name" => "name",
+                //"items" => getStatusList(),
+                "default" => 0,
+                "data_type" => array("string"),
+                "required" => 1
+            ),
+            array(
+                "title" => "Выводить способ доставки(Пример кастомного поля)",
+                "type" => self::FIELD_TYPE_CHECKBOX,
+                "name" => "checker",
+                "default" => true,
+                "data_type" => array("int"),
+                "required" => 1
+            )
         );
-
     }
 }

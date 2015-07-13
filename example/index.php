@@ -15,9 +15,8 @@
             width: 550,
             height: 440
         },
-    send_order = document.getElementById('send_order'),
-    select_way = document.getElementById('select_way');
-
+        send_order = document.getElementById('send_order'),
+        select_way = document.getElementById('select_way');
     callbacks = {
         open: function(){
             //alert("Хук на открытие окна");
@@ -36,16 +35,12 @@
             console.log(data);
         }
     };
-
-
-
     /**
      * Перед отправкой инициализируем модуль
      */
     select_way.onclick = function() {
         DDeliveryModule.init(params, callbacks, 'ddelivery_container_place');
     }
-
     /**
      * Перед отправкой скрипт проводит валидацию
      */
@@ -58,9 +53,7 @@
                 alert(DDeliveryModule.getErrorMsg());
             }
         });
-
     };
-
 </script>
 
 </body>

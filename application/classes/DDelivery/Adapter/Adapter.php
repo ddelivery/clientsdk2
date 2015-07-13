@@ -48,33 +48,26 @@ abstract class Adapter {
      * Поле ФИО
      */
     const USER_FIELD_NAME = 'to_name';
-
     /**
      * Поле email
      */
     const USER_FIELD_EMAIL  = 'to_email';
-
     /**
      * Поле телефон
      */
     const USER_FIELD_PHONE  = 'to_phone';
-
     /**
      * Поле улица
      */
     const USER_FIELD_STREET  = 'to_street';
-
-
     /**
      * Поле дом
      */
     const USER_FIELD_HOUSE  = 'to_house';
-
     /**
      * Поле Квартира
      */
     const USER_FIELD_FLAT = 'to_flat';
-
     /**
      * Поле индекс
      */
@@ -217,6 +210,13 @@ abstract class Adapter {
      * @return array
      */
     public function getUserParams( $request ){
+        if(is_array($request) && count($request) > 0){
+            foreach ($request as $key=>$item) {
+                if(!is_array($item)){
+                    $request[$key] = urlencode($item);
+                }
+            }
+        }
         return $request;
     }
 
@@ -231,11 +231,31 @@ abstract class Adapter {
 
     /**
      *
-     *
+     * получить продукты из корзины
      *
      * @return array
      */
     abstract  public function getProductCart();
+
+
+    /**
+     *
+     * Получить скидку
+     *
+     * @return float
+     */
+    public function getAdminDiscount(){
+        $this->getProductCart();
+    }
+
+    /**
+     *
+     * Получить корзину заказа в админке
+     * @return array
+     */
+    public function getAdminProductCart(){
+        $this->getDiscount();
+    }
 
     /**
      *
@@ -247,6 +267,22 @@ abstract class Adapter {
         $cart = array(
             "products" => $this->getProductCart(),
             "discount"=>$this->getDiscount()
+        );
+        return $cart;
+    }
+
+    /**
+     *
+     * Получить корзину и скидку в административной панели
+     * для редактирования заказов
+     *
+     * @return array
+     */
+    public function getAdminCartAndDiscount(){
+
+        $cart = array(
+            "products" => $this->getAdminProductCart(),
+            "discount"=>$this->getAdminDiscount()
         );
         return $cart;
     }

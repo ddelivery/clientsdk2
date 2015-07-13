@@ -44,7 +44,6 @@ class SettingStorageDB extends DBStorage implements  SettingStorageInterface {
         $sth = $this->pdo->prepare( $query );
         $res = $sth->execute();
         $this->pdo->commit();
-
         return $res;
         //return $sth->execute();
     }

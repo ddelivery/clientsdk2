@@ -9,6 +9,8 @@
 namespace DDelivery\Server;
 
 
+use DDelivery\Adapter\Adapter;
+
 class Api {
 
     public $apiKey;
@@ -61,9 +63,9 @@ class Api {
             'payment_variant' => $payment_variant,
             'local_status' => $status,
             'payment_price' => $payment_price,
-            'to_name' => $to_name,
-            'to_phone' => $to_phone,
-            'to_email' => $to_email
+            Adapter::USER_FIELD_NAME => $to_name,
+            Adapter::USER_FIELD_PHONE => $to_phone,
+            Adapter::USER_FIELD_EMAIL => $to_email
         );
 
         return (array)$this->curlProvider->processPost($this->getUrl('order', 'send'), $params);
@@ -106,9 +108,9 @@ class Api {
             'shop_refnum' => $cmsId,
             'payment_variant' => $payment_variant,
             'local_status' => $status,
-            'to_name' => $to_name,
-            'to_phone' => $to_phone,
-            'to_email' => $to_email
+            Adapter::USER_FIELD_NAME => $to_name,
+            Adapter::USER_FIELD_PHONE => $to_phone,
+            Adapter::USER_FIELD_EMAIL => $to_email
         );
         return (array)$this->curlProvider->processPost($this->getUrl('order', 'edit'), $params);
     }
@@ -123,6 +125,11 @@ class Api {
 
     public function pushCart( array $cart ){
         return (array)$this->curlProvider->processJson($this->getUrl('passport', 'shop'), $cart);
+    }
+
+    public function pushOrderEditCart( array $cart, $id ){
+        $cart['id'] = $id;
+        return (array)$this->curlProvider->processPost($this->getUrl('passport', 'order'), $cart);
     }
 
 
