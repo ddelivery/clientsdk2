@@ -63,7 +63,7 @@ class IntegratorAdapter extends Adapter  {
      * @return string
      */
     public function getSdkServer(){
-        return self::SDK_SERVER_DEV_SDK;
+        return self::SDK_SERVER_SDK;
     }
     public function getCmsName(){
         return 'CmsExample';

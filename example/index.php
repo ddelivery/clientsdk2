@@ -5,36 +5,48 @@
 </head>
 <body>
 <script src="http://sdk.ddelivery.ru/assets/js/ddelivery_v2.js"></script>
-<a href="javascript:void(0)" id="select_way">Выбрать</a>
-<a href="javascript:void(0)" id="send_order">Кнопка отправки заказа</a>
+<form action="delivery.php" method="post" id="delivery_form">
+    <div style="margin-top: 10px;">
+        <a href="javascript:void(0)" id="select_way">Показать модуль</a>
+    </div>
+    <input type="hidden" name="sdk_id" id="sdk_id" value="" />
+    <div  style="margin-top: 10px;">
+        <button id="send_order">Кнопка отправки заказа</button>
+    </div>
+</form>
+
+
 <div id="ddelivery_container_place"></div>
 <script>
     var
         params = {
-            url: 'ajax.php?action=module',
+            url: 'ajax.php?action=module&city=151185',
             width: 550,
             height: 440
         },
         send_order = document.getElementById('send_order'),
-        select_way = document.getElementById('select_way');
-    callbacks = {
-        open: function(){
-            //alert("Хук на открытие окна");
-            console.log("Хук на открытие окна");
-            return true;
-        },
-        change: function(data){
-            console.log(data);
-            console.log("Хук на окончание оформления заказа и обработка результата");
-        },
-        close_map: function(data){
-            console.log('xxxx');
-            console.log("Хук на закрытие карты");
-        },
-        price: function(data){
-            console.log(data);
-        }
-    };
+        select_way = document.getElementById('select_way'),
+        sdk_id_container = document.getElementById('sdk_id'),
+        form = document.getElementById('delivery_form'),
+        callbacks = {
+            open: function(){
+                //alert("Хук на открытие окна");
+                console.log("Хук на открытие окна");
+                return true;
+            },
+            change: function(data){
+                console.log(data.id);
+                sdk_id_container.value = data.id;
+                console.log("Хук на окончание оформления заказа и обработка результата");
+            },
+            close_map: function(data){
+                console.log('xxxx');
+                console.log("Хук на закрытие карты");
+            },
+            price: function(data){
+                console.log(data);
+            }
+        };
     /**
      * Перед отправкой инициализируем модуль
      */
@@ -44,16 +56,25 @@
     /**
      * Перед отправкой скрипт проводит валидацию
      */
-    send_order.onclick = function(){
+
+   send_order.onclick = function(){
         DDeliveryModule.sendForm({
             success:function(){
-                alert("Функция отправки формы");
+                alert("id заказа на сдк сервере " + sdk_id_container.value);
+                if(parseInt(sdk_id_container.value) > 0 ){
+                    form.submit();
+                }else{
+                    alert("Не заполнено поле");
+                }
             },
             error:function(){
                 alert(DDeliveryModule.getErrorMsg());
+                return false;
             }
         });
+        return false;
     };
+
 </script>
 
 </body>
