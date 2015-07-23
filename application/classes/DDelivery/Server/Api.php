@@ -73,18 +73,6 @@ class Api {
 
 
 
-    /**
-     * Получить информацию о заказе
-     *
-     * @param $sdkId
-     * @return array
-     */
-    public function preViewOrder($sdkId){
-        $params = array(
-                'id' => $sdkId
-        );
-        return (array)$this->curlProvider->processPost($this->getUrl('order', 'preview'), $params);
-    }
 
 
     /**
