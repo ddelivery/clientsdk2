@@ -79,6 +79,20 @@ class Api {
      * @param $sdkId
      * @return array
      */
+    public function preViewOrder($sdkId){
+        $params = array(
+                'id' => $sdkId
+        );
+        return (array)$this->curlProvider->processPost($this->getUrl('order', 'preview'), $params);
+    }
+
+
+    /**
+     * Получить информацию о заказе
+     *
+     * @param $sdkId
+     * @return array
+     */
     public function viewOrder($sdkId){
         $params = array(
             'id' => $sdkId
@@ -99,15 +113,17 @@ class Api {
      * @param $to_phone - телефон покупателя
      * @param $to_email - email покупателя
      *
+     * @param $payment_price
      * @return array
      */
     public function editOrder($sdkId, $cmsId, $payment_variant, $status,
-                              $to_name, $to_phone, $to_email){
+                              $to_name, $to_phone, $to_email, $payment_price){
         $params = array(
             'id' => $sdkId,
             'shop_refnum' => $cmsId,
             'payment_variant' => $payment_variant,
             'local_status' => $status,
+            'payment_price' => $payment_price,
             Adapter::USER_FIELD_NAME => $to_name,
             Adapter::USER_FIELD_PHONE => $to_phone,
             Adapter::USER_FIELD_EMAIL => $to_email

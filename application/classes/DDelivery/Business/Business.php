@@ -91,19 +91,44 @@ class Business {
      * @param $to_name - имя покупателя
      * @param $to_phone - телефон покупателя
      * @param $to_email - email покупателя
+     * @param null $payment_price
      * @return bool
      */
-     public function onCmsOrderFinish($sdkId, $cmsId, $payment, $status, $to_name, $to_phone, $to_email){
-        $id = $this->orderStorage->saveOrder($sdkId, $cmsId, $payment, $status);
-        if( !empty($id)  ){
-            $result = $this->api->editOrder($sdkId, $cmsId, $payment, $status, $to_name, $to_phone, $to_email);
+     public function onCmsOrderFinish($sdkId, $cmsId, $payment, $status, $to_name, $to_phone, $to_email, $payment_price = null){
+            if($payment_price === null){
+                if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
+                    $payment_price = 1;
+                else
+                    $payment_price = 0;
+            }else{
+                $payment_price = (int)$payment_price;
+            }
+            $result = $this->api->editOrder($sdkId, $cmsId, $payment, $status, $to_name, $to_phone, $to_email, $payment_price);
             if( isset($result['success']) && $result['success'] == 1 && !empty($result['data']['id']) ){
                 return $result['data']['id'];
             }
-        }
         return false;
     }
 
+
+
+    /**
+     *
+     * Получить информацию о заказе по сдк ID, если он еще не был зафиксирован методом
+     * onCmsOrderFinish
+     *
+     * @param $sdkId
+     * @return array
+     */
+    public function preViewOrder($sdkId){
+        if(!empty($sdkId)){
+            $result = $this->api->viewOrder($sdkId);
+            if( isset($result['success']) && ($result['success'] == 1) && (!empty($result['data']['id'])) ){
+                return $result['data'];
+            }
+        }
+        return [];
+    }
 
 
     /**
@@ -200,8 +225,7 @@ class Business {
                 $payment_price = 0;
                 if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
                     $payment_price = 1;
-                $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status, $payment_price,
-                                                $to_name, $to_phone, $to_email);
+                $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status, $payment_price, $to_name, $to_phone, $to_email);
                 if( isset($result['success']) && $result['success'] == 1 ){
                     $ddelivery_id = $result['data']['ddelivery_id'];
                     $this->orderStorage->saveOrder($sdkId, $cmsId, $payment, $status,

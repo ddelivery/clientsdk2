@@ -25,9 +25,7 @@ class CurlProvider {
 
     public function processJson($url, $params){
         $curl = self::getCurl();
-        //$headers= array('Accept: application/json','Content-Type: application/json');
         curl_setopt($curl, CURLOPT_URL, $url);
-        //curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($params));
         $result = curl_exec($curl);
