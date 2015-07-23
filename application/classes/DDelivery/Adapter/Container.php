@@ -63,11 +63,10 @@ class Container {
     public function getBusiness(){
         if(!isset($this->shared['business'])){
             $api = $this->getApi();
-            $orderStorage = $this->getOrderStorage();
             $tokenStorage = $this->getTokenStorage();
             $settingStorage = $this->getSettingStorage();
             $log = $this->getLogStorage();
-            $business = new Business($api, $tokenStorage, $settingStorage, $orderStorage, $log);
+            $business = new Business($api, $tokenStorage, $settingStorage, $log);
             $this->shared['business'] = $business;
         }
         return $this->shared['business'];
@@ -119,23 +118,6 @@ class Container {
             $this->shared['token'] = $token;
         }
         return $this->shared['token'];
-    }
-
-    /**
-     *
-     * Получить хранилище заказов
-     *
-     * @return OrderStorageInterface
-     */
-    public function getOrderStorage(){
-        if(!isset($this->shared['order'])){
-            $adapter = $this->getAdapter();
-            $pdo = $adapter->getDb();
-            $config = $adapter->getDbConfig();
-            $order = new OrderStorageDB($pdo, $config['type'], $config['prefix']);
-            $this->shared['order'] = $order;
-        }
-        return $this->shared['order'];
     }
 
 

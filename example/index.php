@@ -29,22 +29,23 @@
         sdk_id_container = document.getElementById('sdk_id'),
         form = document.getElementById('delivery_form'),
         callbacks = {
+            resize_event:function(data){
+                // событие при изменению размеров модуля
+                // в объекте data новые размеры
+            },
             open: function(){
-                //alert("Хук на открытие окна");
-                console.log("Хук на открытие окна");
+                // Хук на открытие окна;
                 return true;
             },
             change: function(data){
-                console.log(data.id);
-                sdk_id_container.value = data.id;
-                console.log("Хук на окончание оформления заказа и обработка результата");
+                // Хук на окончание оформления заказа и обработка результата;
             },
             close_map: function(data){
-                console.log('xxxx');
-                console.log("Хук на закрытие карты");
+                // Хук на закрытие карты
             },
             price: function(data){
-                console.log(data);
+                // хук на получение цены текущей доставки при переключении
+                // и возможность НПП в этом пункте
             }
         };
     /**

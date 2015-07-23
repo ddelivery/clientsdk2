@@ -82,20 +82,6 @@ class DDeliveryUI {
         return $logs;
     }
 
-    /**
-     * Получить информацию о заказе по cmsId
-     *
-     * @return array
-     * @throws DDeliveryException
-     */
-    public function actionSync(){
-        if( !empty( $this->request['id']) ){
-            $order = $this->business->getOrder($this->request['id']);
-            return $order;
-        }
-        throw new DDeliveryException("Заказ DDelivery не найден");
-    }
-
 
     /**
      *
@@ -335,7 +321,7 @@ class DDeliveryUI {
      * @return array
      */
     public function getTokenMethod(){
-        return ['orders', 'push', 'fields', 'save', 'order', 'sync', 'log', 'version'];
+        return ['orders', 'push', 'fields', 'save', 'order', 'log', 'version'];
     }
 
     public function preRender(){

@@ -1,5 +1,7 @@
 <?php
 use DDelivery\Adapter\Container;
+use DDelivery\Business\Business;
+
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 require(implode(DIRECTORY_SEPARATOR, array(__DIR__, '..', 'application','bootstrap.php')));
@@ -38,7 +40,7 @@ $container = new Container(array('adapter' => $adapter));
     /**
      * @param $business
      */
-    function performOnCmsOrderFinish($business)
+    function performOnCmsOrderFinish(Business $business)
     {
         echo '<h3>Привязка заказа CMS к id заказа в сдк</h3>';
         $sdk_id = (int)$business->onCmsOrderFinish($_POST['sdk_id'], $_POST['cms_id'], $_POST['payment'], $_POST['status'],
@@ -53,7 +55,7 @@ $container = new Container(array('adapter' => $adapter));
     /**
      * @param $business
      */
-    function performViewOrder($business)
+    function performViewOrder( Business $business)
     {
         echo '<h3>получить информацию о полях доставки</h3>';
         echo '<pre>';
@@ -64,7 +66,7 @@ $container = new Container(array('adapter' => $adapter));
     /**
      * @param $business
      */
-    function performCmsSendOrder($business)
+    function performCmsSendOrder( Business $business)
     {
         echo '<h3>Отправка заявки на ddelivery.ru</h3>';
         echo '<pre>';

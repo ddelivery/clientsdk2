@@ -13,7 +13,6 @@ use DDelivery\Adapter\Adapter;
 use DDelivery\DDeliveryException;
 use DDelivery\Server\Api;
 use DDelivery\Storage\LogStorageInterface;
-use DDelivery\Storage\OrderStorageInterface;
 use DDelivery\Storage\SettingStorageInterface;
 use DDelivery\Storage\TokenStorageInterface;
 use DDelivery\Utils;
@@ -42,10 +41,6 @@ class Business {
      */
     private  $settingStorage;
 
-    /**
-     * @var OrderStorageInterface
-     */
-    private  $orderStorage;
 
     /**
      * @var LogStorageInterface
@@ -54,26 +49,23 @@ class Business {
 
 
     public  function __construct( Api $api, TokenStorageInterface $tokenStorage,
-                                  SettingStorageInterface $settingStorage,
-                                  OrderStorageInterface $orderStorage, LogStorageInterface $log ){
+                                  SettingStorageInterface $settingStorage, LogStorageInterface $log ){
         $this->api = $api;
         $this->tokenStorage = $tokenStorage;
         $this->settingStorage = $settingStorage;
-        $this->orderStorage = $orderStorage;
         $this->log = $log;
     }
 
 
 
     /**
-     * Создать стореджи
+     * Создать хранилища необходимые для работы модуля
      */
     public function initStorage(){
         $tokenStorage = $this->tokenStorage->createStorage();
         $settingStorage = $this->settingStorage->createStorage();
-        $orderStorage = $this->orderStorage->createStorage();
         $log = $this->log->createStorage();
-        if( $tokenStorage && $settingStorage && $orderStorage && $log )
+        if( $tokenStorage && $settingStorage && $log )
            return true;
 
         return false;
@@ -91,10 +83,11 @@ class Business {
      * @param $to_name - имя покупателя
      * @param $to_phone - телефон покупателя
      * @param $to_email - email покупателя
-     * @param null $payment_price
+     * @param null $payment_price - заказ  наложенным платежем или нет [0,1]
      * @return bool
      */
-     public function onCmsOrderFinish($sdkId, $cmsId, $payment, $status, $to_name, $to_phone, $to_email, $payment_price = null){
+     public function onCmsOrderFinish($sdkId, $cmsId, $payment, $status, $to_name,
+                                      $to_phone, $to_email, $payment_price = null){
             if($payment_price === null){
                 if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
                     $payment_price = 1;
@@ -110,25 +103,6 @@ class Business {
         return false;
     }
 
-
-
-    /**
-     *
-     * Получить информацию о заказе по сдк ID, если он еще не был зафиксирован методом
-     * onCmsOrderFinish
-     *
-     * @param $sdkId
-     * @return array
-     */
-    public function preViewOrder($sdkId){
-        if(!empty($sdkId)){
-            $result = $this->api->viewOrder($sdkId);
-            if( isset($result['success']) && ($result['success'] == 1) && (!empty($result['data']['id'])) ){
-                return $result['data'];
-            }
-        }
-        return [];
-    }
 
 
     /**
@@ -167,38 +141,26 @@ class Business {
      */
     public function cmsSendOrder($sdkId, $cmsId, $payment, $status, $to_name,
                                  $to_phone, $to_email, $payment_price = null){
-        $order = $this->orderStorage->getOrder($cmsId);
-        if( count($order) && $order['ddelivery_id'] == 0 ){
 
-            // Разбор с наложенным платежем
-            if($payment_price === null){
-                if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
-                    $payment_price = 1;
-                else
-                    $payment_price = 0;
-            }else{
-                $payment_price = (int)$payment_price;
-            }
+           if($payment_price === null){
+              if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
+                 $payment_price = 1;
+              else
+                 $payment_price = 0;
+           }else{
+                 $payment_price = (int)$payment_price;
+           }
 
-            $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status, $payment_price, $to_name,
-                                            $to_phone, $to_email);
-            if( isset($result['success']) && $result['success'] == 1 ){
-                $ddelivery_id = $result['data']['ddelivery_id'];
-                $this->orderStorage->saveOrder($sdkId, $cmsId, $payment, $status,
-                    $ddelivery_id, $order['id']);
-                return $ddelivery_id;
-            }else{
-                throw new DDeliveryException($result['error_description']);
-            }
-        }
-
-        if( !empty($order['ddelivery_id']) ){
-            return $order['ddelivery_id'];
-        }
-        return 0;
+           $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status, $payment_price, $to_name,
+                                                $to_phone, $to_email);
+           if( isset($result['success']) && $result['success'] == 1 ){
+               $ddelivery_id = $result['data']['ddelivery_id'];
+               return $ddelivery_id;
+           }else{
+               throw new DDeliveryException($result['error_description']);
+           }
+           return 0;
     }
-
-
 
 
     /**
@@ -214,30 +176,32 @@ class Business {
      * @param $to_name - имя покупателя
      * @param $to_phone - телефон покупателя
      * @param $to_email - email покупателя
+     * @param null $payment_price  - наложенный платеж [0,1]
      *
      * @return int
      * @throws DDeliveryException
      */
-    public function onCmsChangeStatus($sdkId, $cmsId, $payment, $status, $to_name, $to_phone, $to_email){
-        $order = $this->orderStorage->getOrder($cmsId);
-        if( count($order) && $order['ddelivery_id'] == 0 ){
-            if($this->settingStorage->getParam(Adapter::PARAM_STATUS_LIST) == $status){
-                $payment_price = 0;
+    public function onCmsChangeStatus($sdkId, $cmsId, $payment, $status,
+                                      $to_name, $to_phone, $to_email, $payment_price = null){
+        if($this->settingStorage->getParam(Adapter::PARAM_STATUS_LIST) == $status){
+
+            if($payment_price === null){
                 if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
                     $payment_price = 1;
-                $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status, $payment_price, $to_name, $to_phone, $to_email);
-                if( isset($result['success']) && $result['success'] == 1 ){
-                    $ddelivery_id = $result['data']['ddelivery_id'];
-                    $this->orderStorage->saveOrder($sdkId, $cmsId, $payment, $status,
-                                                                $ddelivery_id, $order['id']);
-                    return $ddelivery_id;
-                }else{
-                    throw new DDeliveryException($result['error_description']);
-                }
+                else
+                    $payment_price = 0;
+            }else{
+                $payment_price = (int)$payment_price;
             }
-        }
-        if( !empty($order['ddelivery_id']) ){
-            return $order['ddelivery_id'];
+
+           $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status,
+                                               $payment_price, $to_name, $to_phone, $to_email);
+           if( isset($result['success']) && $result['success'] == 1 ){
+             $ddelivery_id = $result['data']['ddelivery_id'];
+             return $ddelivery_id;
+           }else{
+             throw new DDeliveryException($result['error_description']);
+           }
         }
         return 0;
     }
@@ -355,22 +319,6 @@ class Business {
     }
 
     /**
-     * @param \DDelivery\Storage\OrderStorageInterface $orderStorage
-     */
-    public function setOrderStorage($orderStorage)
-    {
-        $this->orderStorage = $orderStorage;
-    }
-
-    /**
-     * @return \DDelivery\Storage\OrderStorageInterface
-     */
-    public function getOrderStorage()
-    {
-        return $this->orderStorage;
-    }
-
-    /**
      * @param \DDelivery\Storage\SettingStorageInterface $settingStorage
      */
     public function setSettingStorage($settingStorage)
@@ -409,18 +357,4 @@ class Business {
         return $this->log;
     }
 
-    /**
-     *
-     * Получить заказ по Id
-     *
-     * @param $sdkId
-     * @return array
-     */
-    public function getOrder($sdkId){
-        $order = $this->orderStorage->getOrderBySdkId((int)$sdkId);
-        if( count( $order )){
-            return $order;
-        }
-        return [];
-    }
-} 
+}

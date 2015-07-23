@@ -14,5 +14,5 @@ require('IntegratorAdapter.php');
 //echo implode(DIRECTORY_SEPARATOR, array(__DIR__,'application','bootstrap.php'));
 $adapter = new IntegratorAdapter();
 $container = new Container(array('adapter' => $adapter));
-//$container->getBusiness()->initStorage();
+$container->getBusiness()->initStorage();
 $container->getUi()->render($_REQUEST);
