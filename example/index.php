@@ -38,6 +38,7 @@
                 return true;
             },
             change: function(data){
+                sdk_id_container.value = data.id;
                 // Хук на окончание оформления заказа и обработка результата;
             },
             close_map: function(data){

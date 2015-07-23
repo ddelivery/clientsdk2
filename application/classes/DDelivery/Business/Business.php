@@ -98,9 +98,9 @@ class Business {
             }
             $result = $this->api->editOrder($sdkId, $cmsId, $payment, $status, $to_name, $to_phone, $to_email, $payment_price);
             if( isset($result['success']) && $result['success'] == 1 && !empty($result['data']['id']) ){
-                return $result['data']['id'];
+                return $result['data'];
             }
-        return false;
+            return false;
     }
 
 

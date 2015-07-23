@@ -43,9 +43,16 @@ $container = new Container(array('adapter' => $adapter));
     function performOnCmsOrderFinish(Business $business)
     {
         echo '<h3>Привязка заказа CMS к id заказа в сдк</h3>';
-        $sdk_id = (int)$business->onCmsOrderFinish($_POST['sdk_id'], $_POST['cms_id'], $_POST['payment'], $_POST['status'],
-            $_POST['to_name'], $_POST['to_phone'], $_POST['to_email']);
-        if ($sdk_id > 0) {
+        $data = $business->onCmsOrderFinish(
+                            $_POST['sdk_id'], $_POST['cms_id'],
+                            $_POST['payment'], $_POST['status'],
+                            $_POST['to_name'], $_POST['to_phone'],
+                            $_POST['to_email']
+        );
+        echo '<pre>';
+        print_r($data);
+        echo '</pre>';
+        if ($data['id'] > 0) {
             echo 'Заказ готов к отправке на ddelivery.ru';
         } else {
             echo 'Заказ уже привязан';
@@ -70,8 +77,12 @@ $container = new Container(array('adapter' => $adapter));
     {
         echo '<h3>Отправка заявки на ddelivery.ru</h3>';
         echo '<pre>';
-        $ddeliveryId = (int)$business->cmsSendOrder($_POST['sdk_id'], $_POST['cms_id'], $_POST['payment'], $_POST['status'],
-            $_POST['to_name'], $_POST['to_phone'], $_POST['to_email']);
+        $ddeliveryId = (int)$business->cmsSendOrder(
+                        $_POST['sdk_id'], $_POST['cms_id'],
+                        $_POST['payment'], $_POST['status'],
+                        $_POST['to_name'], $_POST['to_phone'],
+                        $_POST['to_email']
+        );
         if ($ddeliveryId > 0) {
             echo 'Идентификатор заявки ' . $ddeliveryId;
         }
