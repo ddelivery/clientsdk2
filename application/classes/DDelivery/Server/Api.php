@@ -53,10 +53,12 @@ class Api {
      * @param $to_phone - телефон покупателя
      * @param $to_email - email покупателя
      *
+     * @param string $comment
      * @return array
      */
     public function sendOrder( $sdkId, $cmsId, $payment_variant, $status,
-                               $payment_price, $to_name, $to_phone, $to_email ){
+                               $payment_price, $to_name, $to_phone, $to_email,
+                               $comment = '' ){
         $params = array(
             'id' => $sdkId,
             'shop_refnum' => $cmsId,
@@ -65,7 +67,8 @@ class Api {
             'payment_price' => $payment_price,
             Adapter::USER_FIELD_NAME => $to_name,
             Adapter::USER_FIELD_PHONE => $to_phone,
-            Adapter::USER_FIELD_EMAIL => $to_email
+            Adapter::USER_FIELD_EMAIL => $to_email,
+            Adapter::USER_FIELD_COMMENT => $comment
         );
 
         return (array)$this->curlProvider->processPost($this->getUrl('order', 'send'), $params);
@@ -102,10 +105,12 @@ class Api {
      * @param $to_email - email покупателя
      *
      * @param $payment_price
+     * @param string $comment
      * @return array
      */
     public function editOrder($sdkId, $cmsId, $payment_variant, $status,
-                              $to_name, $to_phone, $to_email, $payment_price){
+                              $to_name, $to_phone, $to_email,
+                              $payment_price, $comment = ''){
         $params = array(
             'id' => $sdkId,
             'shop_refnum' => $cmsId,
@@ -114,13 +119,13 @@ class Api {
             'payment_price' => $payment_price,
             Adapter::USER_FIELD_NAME => $to_name,
             Adapter::USER_FIELD_PHONE => $to_phone,
-            Adapter::USER_FIELD_EMAIL => $to_email
+            Adapter::USER_FIELD_EMAIL => $to_email,
+            Adapter::USER_FIELD_COMMENT => $comment
         );
         return (array)$this->curlProvider->processPost($this->getUrl('order', 'edit'), $params);
     }
 
     public function accessAdmin($token){
-
         $params = array(
             'token' => $token
         );

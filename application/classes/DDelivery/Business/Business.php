@@ -84,10 +84,11 @@ class Business {
      * @param $to_phone - телефон покупателя
      * @param $to_email - email покупателя
      * @param null $payment_price - заказ  наложенным платежем или нет [0,1]
+     * @param string $comment
      * @return bool
      */
      public function onCmsOrderFinish($sdkId, $cmsId, $payment, $status, $to_name,
-                                      $to_phone, $to_email, $payment_price = null){
+                                      $to_phone, $to_email, $payment_price = null, $comment = ''){
             if($payment_price === null){
                 if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
                     $payment_price = 1;
@@ -96,7 +97,8 @@ class Business {
             }else{
                 $payment_price = (int)$payment_price;
             }
-            $result = $this->api->editOrder($sdkId, $cmsId, $payment, $status, $to_name, $to_phone, $to_email, $payment_price);
+            $result = $this->api->editOrder($sdkId, $cmsId, $payment, $status, $to_name,
+                                            $to_phone, $to_email, $payment_price, $comment);
             if( isset($result['success']) && $result['success'] == 1 && !empty($result['data']['id']) ){
                 return $result['data'];
             }
@@ -136,11 +138,12 @@ class Business {
      * @param null $payment_price - наложенный платеж,
      * по умолчанию берется из значения параметра настроек варианта оплаты,
      * но возможно выставлять и вручную
+     * @param string $comment
      * @return int
      * @throws DDeliveryException
      */
     public function cmsSendOrder($sdkId, $cmsId, $payment, $status, $to_name,
-                                 $to_phone, $to_email, $payment_price = null){
+                                 $to_phone, $to_email, $payment_price = null, $comment = ''){
 
            if($payment_price === null){
               if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
@@ -152,7 +155,7 @@ class Business {
            }
 
            $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status, $payment_price, $to_name,
-                                                $to_phone, $to_email);
+                                                $to_phone, $to_email, $comment);
            if( isset($result['success']) && $result['success'] == 1 ){
                $ddelivery_id = $result['data']['ddelivery_id'];
                return $ddelivery_id;
@@ -176,13 +179,15 @@ class Business {
      * @param $to_name - имя покупателя
      * @param $to_phone - телефон покупателя
      * @param $to_email - email покупателя
-     * @param null $payment_price  - наложенный платеж [0,1]
+     * @param null $payment_price - наложенный платеж [0,1]
      *
+     * @param string $comment
      * @return int
      * @throws DDeliveryException
      */
     public function onCmsChangeStatus($sdkId, $cmsId, $payment, $status,
-                                      $to_name, $to_phone, $to_email, $payment_price = null){
+                                      $to_name, $to_phone, $to_email,
+                                      $payment_price = null, $comment = ''){
         if($this->settingStorage->getParam(Adapter::PARAM_STATUS_LIST) == $status){
 
             if($payment_price === null){
@@ -195,7 +200,9 @@ class Business {
             }
 
            $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status,
-                                               $payment_price, $to_name, $to_phone, $to_email);
+                                           $payment_price, $to_name, $to_phone,
+                                           $to_email, $comment);
+
            if( isset($result['success']) && $result['success'] == 1 ){
              $ddelivery_id = $result['data']['ddelivery_id'];
              return $ddelivery_id;
