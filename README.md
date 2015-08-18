@@ -419,18 +419,24 @@ DDeliveryModule.init(params, callbacks, 'ddelivery_container_place');
 с информацией про доставку в виде js объекта
 
 ```
+cart: Object - корзина заказа
 city: "151184"  - id города доставки
 city_name: "г. Москва" - Город доставки
 client_price: 281.49 - Цена доставки
 company: "20" - id компании доставки
 company_name: "DPD Parcel" - Название компании доставки
+company_info: информация о компании доставки(значения из калькулятора АПИ метода)
+ddelivery_id: null - id заявки на ddelivery.ru
 id: 1198 - SDK ID (не путать с ID заявки на ddelivery.ru)
 info: "Курьерская доставка, ул. Цветаева, 15, кв. 122, ID компании:20, г. Москва" - описание в виде строки
 payment_availability: 1 - возможность наложенного платежа
-point: 0 - id точки
+point: 0 - id ПВЗ
 to_flat: "122" - квартира
+to_email: "example@mail.ru" - email
 to_house: "15" - дом
-to_street: "Цветаева" - улица
+to_street: "Цветаева" - улица,
+to_name:"ФИО",
+ttl_token:"128e9908a87bb69944f649291e816f78" - токен для заказа
 type: 2 - тип доставки 1 - Самовывоз, 2 - Курьерка, 3 - Почта
 ```
 
