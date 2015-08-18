@@ -139,30 +139,22 @@ class Business {
      * по умолчанию берется из значения параметра настроек варианта оплаты,
      * но возможно выставлять и вручную
      * @param string $comment
+     * @param float|int $payment_price_value
      * @return int
      * @throws DDeliveryException
      */
     public function cmsSendOrder($sdkId, $cmsId, $payment, $status, $to_name,
-                                 $to_phone, $to_email, $payment_price = null, $comment = ''){
-
-           if($payment_price === null){
-              if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
-                 $payment_price = 1;
-              else
-                 $payment_price = 0;
-           }else{
-                 $payment_price = (int)$payment_price;
-           }
-
-           $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status, $payment_price, $to_name,
-                                                $to_phone, $to_email, $comment);
-           if( isset($result['success']) && $result['success'] == 1 ){
-               $ddelivery_id = $result['data']['ddelivery_id'];
-               return $ddelivery_id;
-           }else{
-               throw new DDeliveryException($result['error_description']);
-           }
-           return 0;
+                                 $to_phone, $to_email, $payment_price = null,
+                                 $comment = '', $payment_price_value = 0){
+        $payment_price = $this->_getPaymentPrice($payment, $payment_price);
+        $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status, $payment_price, $to_name,
+                                        $to_phone, $to_email, $comment, $payment_price_value);
+        if( isset($result['success']) && $result['success'] == 1 ){
+            $ddelivery_id = $result['data']['ddelivery_id'];
+            return $ddelivery_id;
+        }else{
+            throw new DDeliveryException($result['error_description']);
+        }
     }
 
 
@@ -180,37 +172,60 @@ class Business {
      * @param $to_phone - телефон покупателя
      * @param $to_email - email покупателя
      * @param null $payment_price - наложенный платеж [0,1]
-     *
      * @param string $comment
+     * @param int|float $payment_price_value
+     *
      * @return int
      * @throws DDeliveryException
      */
-    public function onCmsChangeStatus($sdkId, $cmsId, $payment, $status,
-                                      $to_name, $to_phone, $to_email,
-                                      $payment_price = null, $comment = ''){
-        if($this->settingStorage->getParam(Adapter::PARAM_STATUS_LIST) == $status){
-
-            if($payment_price === null){
-                if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
-                    $payment_price = 1;
-                else
-                    $payment_price = 0;
-            }else{
-                $payment_price = (int)$payment_price;
-            }
-
-           $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status,
-                                           $payment_price, $to_name, $to_phone,
-                                           $to_email, $comment);
-
-           if( isset($result['success']) && $result['success'] == 1 ){
-             $ddelivery_id = $result['data']['ddelivery_id'];
-             return $ddelivery_id;
-           }else{
-             throw new DDeliveryException($result['error_description']);
-           }
+    public function onCmsChangeStatus($sdkId, $cmsId, $payment, $status, $to_name, $to_phone,
+                                      $to_email, $payment_price = null, $comment = '',
+                                      $payment_price_value = 0){
+        if($this->settingStorage->getParam(Adapter::PARAM_STATUS_LIST) != $status){
+            return 0;
         }
-        return 0;
+        $payment_price = $this->_getPaymentPrice($payment, $payment_price);
+        $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status, $payment_price,
+                                        $to_name, $to_phone, $to_email, $comment, $payment_price_value);
+
+        if( isset($result['success']) && $result['success'] == 1 ){
+            $ddelivery_id = $result['data']['ddelivery_id'];
+            return $ddelivery_id;
+        }else{
+            throw new DDeliveryException($result['error_description']);
+        }
+    }
+
+    /**
+     *
+     * Редактирование заказа
+     *
+     * @param $sdkId - идентификатор на сервере полученный при оформлении заказа
+     * @param $cmsId - идентификатор заказа в CMS
+     * @param $payment - вариант оплаты(идентификатор)
+     * @param $status - статус заказа(идентификатор)
+     * @param $to_name - имя покупателя
+     * @param $to_phone - телефон покупателя
+     * @param $to_email - email покупателя
+     * @param null $payment_price - наложенный платеж [0,1]
+     * @param string $comment
+     * @param int|float $payment_price_value
+     * @return mixed
+     * @throws DDeliveryException
+     */
+    public function changeOrder($sdkId, $cmsId, $payment, $status, $to_name, $to_phone,
+                                $to_email, $payment_price = null, $comment = '',
+                                $payment_price_value = 0){
+        $payment_price = $this->_getPaymentPrice($payment, $payment_price);
+
+        $result = $this->api->changeOrder($sdkId, $cmsId, $payment, $status, $payment_price,
+                                          $to_name, $to_phone, $to_email, $comment, $payment_price_value);
+        if( isset($result['success']) && $result['success'] == 1 ){
+            $id = $result['data']['id'];
+            return $id;
+        }else{
+            throw new DDeliveryException($result['error_description']);
+        }
     }
 
     /**
@@ -362,6 +377,27 @@ class Business {
      */
     public function getLog(){
         return $this->log;
+    }
+
+    /**
+     *
+     * Наложенный платеж заказа (Да|Нет)
+     *
+     * @param $payment
+     * @param $payment_price
+     * @return int
+     */
+    protected function _getPaymentPrice($payment, $payment_price)
+    {
+        if ($payment_price === null) {
+            if ($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
+                $payment_price = 1;
+            else
+                $payment_price = 0;
+        } else {
+            $payment_price = (int)$payment_price;
+        }
+        return $payment_price;
     }
 
 }

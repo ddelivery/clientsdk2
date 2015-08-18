@@ -22,7 +22,6 @@ class CurlProvider {
         return $curl;
     }
 
-
     public function processJson($url, $params){
         $curl = self::getCurl();
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -33,7 +32,6 @@ class CurlProvider {
         return json_decode( $result, true );
     }
 
-
     public function processPost($url, $params){
         $curl = self::getCurl();
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -43,8 +41,6 @@ class CurlProvider {
         curl_close($curl);
         return json_decode( $result, true );
     }
-
-
 
     public function processGet($url, $params){
 

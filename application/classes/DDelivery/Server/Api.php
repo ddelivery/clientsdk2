@@ -54,17 +54,19 @@ class Api {
      * @param $to_email - email покупателя
      *
      * @param string $comment
+     * @param float|int $payment_price_value
      * @return array
      */
     public function sendOrder( $sdkId, $cmsId, $payment_variant, $status,
                                $payment_price, $to_name, $to_phone, $to_email,
-                               $comment = '' ){
+                               $comment = '', $payment_price_value = 0 ){
         $params = array(
             'id' => $sdkId,
             'shop_refnum' => $cmsId,
             'payment_variant' => $payment_variant,
             'local_status' => $status,
             'payment_price' => $payment_price,
+            'payment_price_value' => $payment_price_value,
             Adapter::USER_FIELD_NAME => $to_name,
             Adapter::USER_FIELD_PHONE => $to_phone,
             Adapter::USER_FIELD_EMAIL => $to_email,
@@ -72,6 +74,43 @@ class Api {
         );
 
         return (array)$this->curlProvider->processPost($this->getUrl('order', 'send'), $params);
+    }
+
+
+    /**
+     *
+     * Редактируем заказ на сервере DDelivery.ru(если заявка отправлена)
+     *
+     * @param $sdkId - идентификатор на сервере полученный при оформлении заказа
+     * @param $cmsId - идентификатор заказа в CMS
+     * @param $payment_variant - вариант оплаты(идентификатор)
+     * @param $status - статус заказа(идентификатор)
+     * @param $payment_price - наложенный платеж [0,1](нет, да)
+     * @param $to_name - имя покупателя
+     * @param $to_phone - телефон покупателя
+     * @param $to_email - email покупателя
+     *
+     * @param string $comment
+     * @param float|int $payment_price_value
+     * @return array
+     */
+    public function changeOrder( $sdkId, $cmsId, $payment_variant, $status,
+                                 $payment_price, $to_name, $to_phone, $to_email,
+                                 $comment = '', $payment_price_value = 0 ){
+        $params = array(
+            'id' => $sdkId,
+            'shop_refnum' => $cmsId,
+            'payment_variant' => $payment_variant,
+            'local_status' => $status,
+            'payment_price' => $payment_price,
+            'payment_price_value' => $payment_price_value,
+            Adapter::USER_FIELD_NAME => $to_name,
+            Adapter::USER_FIELD_PHONE => $to_phone,
+            Adapter::USER_FIELD_EMAIL => $to_email,
+            Adapter::USER_FIELD_COMMENT => $comment
+        );
+
+        return (array)$this->curlProvider->processPost($this->getUrl('order', 'change'), $params);
     }
 
 
@@ -116,7 +155,6 @@ class Api {
             'shop_refnum' => $cmsId,
             'payment_variant' => $payment_variant,
             'local_status' => $status,
-            'payment_price' => $payment_price,
             Adapter::USER_FIELD_NAME => $to_name,
             Adapter::USER_FIELD_PHONE => $to_phone,
             Adapter::USER_FIELD_EMAIL => $to_email,
