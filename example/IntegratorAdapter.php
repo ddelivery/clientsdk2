@@ -16,7 +16,7 @@ class IntegratorAdapter extends Adapter  {
      * @return string
      */
     public function getApiKey(){
-        return '852af44bafef22e96d8277f3227f0998';
+        return 'c0dbcd6dd89837104de0d7f42b9fe7b2';
     }
     public function getPathByDB(){
         return 'db.sqlite';
@@ -63,7 +63,7 @@ class IntegratorAdapter extends Adapter  {
      * @return string
      */
     public function getSdkServer(){
-        return self::SDK_SERVER_DEV_SDK;
+        return self::SDK_SERVER_SDK ;
     }
     public function getCmsName(){
         return 'CmsExample';
@@ -146,7 +146,15 @@ class IntegratorAdapter extends Adapter  {
      * @return array
      */
     public function getUserParams($request){
-        return parent::getUserParams($request);
+        return array(
+            self::USER_FIELD_STREET => 'Цветаевой',
+            self::USER_FIELD_COMMENT => 'Комментарий',
+            self::USER_FIELD_HOUSE => '2а',
+            self::USER_FIELD_FLAT => '123',
+            self::USER_FIELD_ZIP => '10101'
+        );
+
+        //return parent::getUserParams($request);
         /*
         return array(
             self::USER_FIELD_STREET => 'Цветаевой',
