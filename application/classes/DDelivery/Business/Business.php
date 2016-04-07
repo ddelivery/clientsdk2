@@ -17,8 +17,8 @@ use DDelivery\Storage\SettingStorageInterface;
 use DDelivery\Storage\TokenStorageInterface;
 use DDelivery\Utils;
 
-class Business {
-
+class Business
+{
 
 
     /**
@@ -29,27 +29,29 @@ class Business {
     /**
      * @var Api
      */
-    private  $api;
+    private $api;
 
     /**
      * @var TokenStorageInterface
      */
-    private  $tokenStorage;
+    private $tokenStorage;
 
     /**
      * @var SettingStorageInterface
      */
-    private  $settingStorage;
+    private $settingStorage;
 
 
     /**
      * @var LogStorageInterface
      */
-    private  $log;
+    private $log;
 
 
-    public  function __construct( Api $api, TokenStorageInterface $tokenStorage,
-                                  SettingStorageInterface $settingStorage, LogStorageInterface $log ){
+    public function __construct(
+        Api $api, TokenStorageInterface $tokenStorage,
+        SettingStorageInterface $settingStorage, LogStorageInterface $log
+    ) {
         $this->api = $api;
         $this->tokenStorage = $tokenStorage;
         $this->settingStorage = $settingStorage;
@@ -57,16 +59,17 @@ class Business {
     }
 
 
-
     /**
      * Создать хранилища необходимые для работы модуля
      */
-    public function initStorage(){
+    public function initStorage()
+    {
         $tokenStorage = $this->tokenStorage->createStorage();
         $settingStorage = $this->settingStorage->createStorage();
         $log = $this->log->createStorage();
-        if( $tokenStorage && $settingStorage && $log )
-           return true;
+        if ($tokenStorage && $settingStorage && $log) {
+            return true;
+        }
 
         return false;
 
@@ -87,24 +90,26 @@ class Business {
      * @param string $comment
      * @return bool
      */
-     public function onCmsOrderFinish($sdkId, $cmsId, $payment, $status, $to_name,
-                                      $to_phone, $to_email, $payment_price = null, $comment = ''){
-            if($payment_price === null){
-                if($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
-                    $payment_price = 1;
-                else
-                    $payment_price = 0;
-            }else{
-                $payment_price = (int)$payment_price;
+    public function onCmsOrderFinish(
+        $sdkId, $cmsId, $payment, $status, $to_name,
+        $to_phone, $to_email, $payment_price = null, $comment = ''
+    ) {
+        if ($payment_price === null) {
+            if ($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment) {
+                $payment_price = 1;
+            } else {
+                $payment_price = 0;
             }
-            $result = $this->api->editOrder($sdkId, $cmsId, $payment, $status, $to_name,
-                                            $to_phone, $to_email, $payment_price, $comment);
-            if( isset($result['success']) && $result['success'] == 1 && !empty($result['data']['id']) ){
-                return $result['data'];
-            }
-            return false;
+        } else {
+            $payment_price = (int)$payment_price;
+        }
+        $result = $this->api->editOrder($sdkId, $cmsId, $payment, $status, $to_name,
+            $to_phone, $to_email, $payment_price, $comment);
+        if (isset($result['success']) && $result['success'] == 1 && !empty($result['data']['id'])) {
+            return $result['data'];
+        }
+        return false;
     }
-
 
 
     /**
@@ -114,10 +119,11 @@ class Business {
      * @param $sdkId
      * @return array
      */
-    public function viewOrder($sdkId){
-        if(!empty($sdkId)){
+    public function viewOrder($sdkId)
+    {
+        if (!empty($sdkId)) {
             $result = $this->api->viewOrder($sdkId);
-            if( isset($result['success']) && ($result['success'] == 1) && (!empty($result['data']['id'])) ){
+            if (isset($result['success']) && ($result['success'] == 1) && (!empty($result['data']['id']))) {
                 return $result['data'];
             }
         }
@@ -143,16 +149,18 @@ class Business {
      * @return int
      * @throws DDeliveryException
      */
-    public function cmsSendOrder($sdkId, $cmsId, $payment, $status, $to_name,
-                                 $to_phone, $to_email, $payment_price = null,
-                                 $comment = '', $payment_price_value = 0){
+    public function cmsSendOrder(
+        $sdkId, $cmsId, $payment, $status, $to_name,
+        $to_phone, $to_email, $payment_price = null,
+        $comment = '', $payment_price_value = 0
+    ) {
         $payment_price = $this->_getPaymentPrice($payment, $payment_price);
         $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status, $payment_price, $to_name,
-                                        $to_phone, $to_email, $comment, $payment_price_value);
-        if( isset($result['success']) && $result['success'] == 1 ){
+            $to_phone, $to_email, $comment, $payment_price_value);
+        if (isset($result['success']) && $result['success'] == 1) {
             $ddelivery_id = $result['data']['ddelivery_id'];
             return $ddelivery_id;
-        }else{
+        } else {
             throw new DDeliveryException($result['error_description']);
         }
     }
@@ -178,20 +186,22 @@ class Business {
      * @return int
      * @throws DDeliveryException
      */
-    public function onCmsChangeStatus($sdkId, $cmsId, $payment, $status, $to_name, $to_phone,
-                                      $to_email, $payment_price = null, $comment = '',
-                                      $payment_price_value = 0){
-        if($this->settingStorage->getParam(Adapter::PARAM_STATUS_LIST) != $status){
+    public function onCmsChangeStatus(
+        $sdkId, $cmsId, $payment, $status, $to_name, $to_phone,
+        $to_email, $payment_price = null, $comment = '',
+        $payment_price_value = 0
+    ) {
+        if ($this->settingStorage->getParam(Adapter::PARAM_STATUS_LIST) != $status) {
             return 0;
         }
         $payment_price = $this->_getPaymentPrice($payment, $payment_price);
         $result = $this->api->sendOrder($sdkId, $cmsId, $payment, $status, $payment_price,
-                                        $to_name, $to_phone, $to_email, $comment, $payment_price_value);
+            $to_name, $to_phone, $to_email, $comment, $payment_price_value);
 
-        if( isset($result['success']) && $result['success'] == 1 ){
+        if (isset($result['success']) && $result['success'] == 1) {
             $ddelivery_id = $result['data']['ddelivery_id'];
             return $ddelivery_id;
-        }else{
+        } else {
             throw new DDeliveryException($result['error_description']);
         }
     }
@@ -213,17 +223,19 @@ class Business {
      * @return mixed
      * @throws DDeliveryException
      */
-    public function changeOrder($sdkId, $cmsId, $payment, $status, $to_name, $to_phone,
-                                $to_email, $payment_price = null, $comment = '',
-                                $payment_price_value = 0){
+    public function changeOrder(
+        $sdkId, $cmsId, $payment, $status, $to_name, $to_phone,
+        $to_email, $payment_price = null, $comment = '',
+        $payment_price_value = 0
+    ) {
         $payment_price = $this->_getPaymentPrice($payment, $payment_price);
 
         $result = $this->api->changeOrder($sdkId, $cmsId, $payment, $status, $payment_price,
-                                          $to_name, $to_phone, $to_email, $comment, $payment_price_value);
-        if( isset($result['success']) && $result['success'] == 1 ){
+            $to_name, $to_phone, $to_email, $comment, $payment_price_value);
+        if (isset($result['success']) && $result['success'] == 1) {
             $id = $result['data']['id'];
             return $id;
-        }else{
+        } else {
             throw new DDeliveryException($result['error_description']);
         }
     }
@@ -234,9 +246,10 @@ class Business {
      * @param $token
      * @return bool
      */
-    public function checkHandshakeToken($token){
+    public function checkHandshakeToken($token)
+    {
         $result = $this->api->checkHandshakeToken($token);
-        if( isset($result['success']) && $result['success'] == 1 ){
+        if (isset($result['success']) && $result['success'] == 1) {
             return true;
         }
         return false;
@@ -248,8 +261,9 @@ class Business {
      * @param $settings
      * @return bool
      */
-    public function saveSettings($settings){
-        if( $this->settingStorage->save($settings) ){
+    public function saveSettings($settings)
+    {
+        if ($this->settingStorage->save($settings)) {
             return true;
         }
         return false;
@@ -258,16 +272,22 @@ class Business {
 
     /**
      * Получить токен для входа в панель серверного сдк
-     * @throws \DDelivery\DDeliveryException
+     *
+     * Урл магазина
+     *
+     * @param string $realUrl
      * @return null
+     * @throws DDeliveryException
      */
-    public function renderAdmin(){
+    public function renderAdmin($realUrl = '')
+    {
         $token = $this->generateToken();
-        if(empty($token))
+        if (empty($token)) {
             throw new DDeliveryException("Ошибка генерции токена");
+        }
 
-        $result = $this->api->accessAdmin($token);
-        if( isset($result['success']) && ($result['success'] == 1) ){
+        $result = $this->api->accessAdmin($token, $realUrl);
+        if (isset($result['success']) && ($result['success'] == 1)) {
             return $result['data'];
         }
         return null;
@@ -282,9 +302,10 @@ class Business {
      * @param $id
      * @return null
      */
-    public function renderEditOrderToken($cart, $id){
+    public function renderEditOrderToken($cart, $id)
+    {
         $result = $this->api->pushOrderEditCart($cart, $id);
-        if( isset($result['success']) && $result['success'] == 1 ){
+        if (isset($result['success']) && $result['success'] == 1) {
             return $result['data'];
         }
         return null;
@@ -298,9 +319,10 @@ class Business {
      * @param $cart
      * @return null
      */
-    public function renderModuleToken($cart){
+    public function renderModuleToken($cart)
+    {
         $result = $this->api->pushCart($cart);
-        if( isset($result['success']) && $result['success'] == 1 ){
+        if (isset($result['success']) && $result['success'] == 1) {
             return $result['data'];
         }
         return null;
@@ -313,9 +335,10 @@ class Business {
      *
      * @return string
      */
-    public function generateToken(){
+    public function generateToken()
+    {
         $token = Utils::generateToken();
-        if( $this->tokenStorage->createToken($token, self::TOKEN_LIFE_TIME) ){
+        if ($this->tokenStorage->createToken($token, self::TOKEN_LIFE_TIME)) {
             return $token;
         }
         return null;
@@ -329,14 +352,16 @@ class Business {
      * @param $token
      * @return bool
      */
-    public function checkToken($token){
-        if( $this->tokenStorage->checkToken($token) ){
+    public function checkToken($token)
+    {
+        if ($this->tokenStorage->checkToken($token)) {
             return true;
         }
         return false;
     }
 
-    public function setApi($api){
+    public function setApi($api)
+    {
         $this->api = $api;
     }
 
@@ -375,7 +400,8 @@ class Business {
     /**
      * @return \DDelivery\Storage\LogStorageInterface
      */
-    public function getLog(){
+    public function getLog()
+    {
         return $this->log;
     }
 
@@ -390,10 +416,11 @@ class Business {
     protected function _getPaymentPrice($payment, $payment_price)
     {
         if ($payment_price === null) {
-            if ($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment)
+            if ($this->settingStorage->getParam(Adapter::PARAM_PAYMENT_LIST) == $payment) {
                 $payment_price = 1;
-            else
+            } else {
                 $payment_price = 0;
+            }
         } else {
             $payment_price = (int)$payment_price;
         }

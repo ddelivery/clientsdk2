@@ -14,11 +14,12 @@ use DDelivery\DDeliveryException;
 use DDelivery\Utils;
 use PDO;
 
-abstract class Adapter {
+abstract class Adapter
+{
 
     public $params;
 
-    const SDK_VERSION          = '0.9';
+    const SDK_VERSION = '0.9';
 
     const SDK_SERVER_SDK = 'http://sdk.ddelivery.ru/api/v1/';
 
@@ -40,9 +41,9 @@ abstract class Adapter {
 
     const PARAM_STATUS_LIST = 'status_list';
 
-    const DB_MYSQL           = 1;
+    const DB_MYSQL = 1;
 
-    const DB_SQLITE          = 2;
+    const DB_SQLITE = 2;
 
     /**
      * Поле ФИО
@@ -51,19 +52,19 @@ abstract class Adapter {
     /**
      * Поле email
      */
-    const USER_FIELD_EMAIL  = 'to_email';
+    const USER_FIELD_EMAIL = 'to_email';
     /**
      * Поле телефон
      */
-    const USER_FIELD_PHONE  = 'to_phone';
+    const USER_FIELD_PHONE = 'to_phone';
     /**
      * Поле улица
      */
-    const USER_FIELD_STREET  = 'to_street';
+    const USER_FIELD_STREET = 'to_street';
     /**
      * Поле дом
      */
-    const USER_FIELD_HOUSE  = 'to_house';
+    const USER_FIELD_HOUSE = 'to_house';
     /**
      * Поле Квартира
      */
@@ -71,22 +72,25 @@ abstract class Adapter {
     /**
      * Поле индекс
      */
-    const USER_FIELD_ZIP  = 'to_zip';
+    const USER_FIELD_ZIP = 'to_zip';
 
     /**
      * Поле комментарий
      */
-    const USER_FIELD_COMMENT  = 'comment';
+    const USER_FIELD_COMMENT = 'comment';
 
-    public function __construct($params = []){
+    public function __construct($params = [])
+    {
         $this->params = $params;
     }
 
-    public function getEnterPoint(){
+    public function getEnterPoint()
+    {
         return Utils::fullUrl($_SERVER, false);
     }
 
-    public function getPathByDB(){
+    public function getPathByDB()
+    {
         return '../db/db.sqlite';
     }
 
@@ -95,7 +99,8 @@ abstract class Adapter {
      * Настройки базы данных
      * @return array
      */
-    public function getDbConfig(){
+    public function getDbConfig()
+    {
         return array(
             'type' => self::DB_SQLITE,
             'dbPath' => $this->getPathByDB(),
@@ -121,13 +126,15 @@ abstract class Adapter {
      * @return \PDO
      * @throws DDeliveryException
      */
-    public function getDb(){
+    public function getDb()
+    {
         $dbConfig = $this->getDbConfig();
         if (isset($dbConfig['pdo']) && ($dbConfig['pdo'] instanceof \PDO || $dbConfig['pdo'] instanceof ConnectInterface)) {
             $pdo = $dbConfig['pdo'];
         } elseif ($dbConfig['type'] == self::DB_SQLITE) {
-            if (!$dbConfig['dbPath'])
+            if (!$dbConfig['dbPath']) {
                 throw new DDeliveryException('SQLite db is empty');
+            }
             $dbDir = dirname($dbConfig['dbPath']);
 
             if ((!is_writable($dbDir)) || (!is_writable($dbConfig['dbPath'])) || (!is_dir($dbDir))) {
@@ -154,7 +161,7 @@ abstract class Adapter {
      * @return string
      * @throws \DDelivery\DDeliveryException
      */
-    abstract  public function getApiKey();
+    abstract public function getApiKey();
 
 
     /**
@@ -168,11 +175,11 @@ abstract class Adapter {
      * @param array $orders
      * @return bool
      */
-    abstract  public function changeStatus(array $orders);
+    abstract public function changeStatus(array $orders);
 
-    abstract  public function getCmsName();
+    abstract public function getCmsName();
 
-    abstract  public function getCmsVersion();
+    abstract public function getCmsVersion();
 
 
     /**
@@ -185,7 +192,7 @@ abstract class Adapter {
      * @param $id
      * @return array
      */
-    abstract  public function getOrder( $id );
+    abstract public function getOrder($id);
 
 
     /**
@@ -199,7 +206,7 @@ abstract class Adapter {
      * @param $to
      * @return array
      */
-    abstract  public function getOrders( $from, $to );
+    abstract public function getOrders($from, $to);
 
 
     /**
@@ -209,10 +216,11 @@ abstract class Adapter {
      * @param $request
      * @return array
      */
-    public function getUserParams( $request ){
-        if(is_array($request) && count($request) > 0){
-            foreach ($request as $key=>$item) {
-                if(!is_array($item)){
+    public function getUserParams($request)
+    {
+        if (is_array($request) && count($request) > 0) {
+            foreach ($request as $key => $item) {
+                if (!is_array($item)) {
                     $request[$key] = urlencode($item);
                 }
             }
@@ -227,7 +235,7 @@ abstract class Adapter {
      *
      * @return float
      */
-    abstract  public function getDiscount();
+    abstract public function getDiscount();
 
     /**
      *
@@ -235,14 +243,15 @@ abstract class Adapter {
      *
      * @return array
      */
-    abstract  public function getProductCart();
+    abstract public function getProductCart();
 
 
     /**
      * Получить скидку
      * @return float
      */
-    public function getAdminDiscount(){
+    public function getAdminDiscount()
+    {
         $this->getDiscount();
     }
 
@@ -251,7 +260,8 @@ abstract class Adapter {
      * Получить корзину заказа в админке
      * @return array
      */
-    public function getAdminProductCart(){
+    public function getAdminProductCart()
+    {
         $this->getProductCart();
     }
 
@@ -261,10 +271,11 @@ abstract class Adapter {
      *
      * @return array
      */
-    public function getCartAndDiscount(){
+    public function getCartAndDiscount()
+    {
         $cart = array(
             "products" => $this->getProductCart(),
-            "discount"=>$this->getDiscount()
+            "discount" => $this->getDiscount()
         );
         return $cart;
     }
@@ -276,11 +287,12 @@ abstract class Adapter {
      *
      * @return array
      */
-    public function getAdminCartAndDiscount(){
+    public function getAdminCartAndDiscount()
+    {
 
         $cart = array(
             "products" => $this->getAdminProductCart(),
-            "discount"=>$this->getAdminDiscount()
+            "discount" => $this->getAdminDiscount()
         );
         return $cart;
     }
@@ -291,7 +303,8 @@ abstract class Adapter {
      *
      * @return string
      */
-    public function getSdkServer(){
+    public function getSdkServer()
+    {
         return self::SDK_SERVER_SDK;
     }
 
@@ -319,40 +332,48 @@ abstract class Adapter {
      */
     abstract public function isAdmin();
 
-    public function getCustomSettingsFields(){
+    public function getCustomSettingsFields()
+    {
         return array();
     }
-        /***
+
+    /***
      *
      * Для формирование настроек на стороне серверного сдк,
      * описание в виде массива
      *
      * @return array
      */
-    function getFieldList(){
+    function getFieldList()
+    {
 
         $userFields = $this->getCustomSettingsFields();
         $requiredFields = array(
-                            array(
-                                "title" => "Способы оплаты, который соответствует наложенному платежу",
-                                "type" => self::FIELD_TYPE_LIST,
-                                "name" => self::PARAM_PAYMENT_LIST,
-                                "items" => $this->getCmsPaymentList(),
-                                "default" => 0,
-                                "data_type" => array("int"),
-                                "required" => 1
-                            ),
-                            array(
-                                "title" => "Статус заказа для отправки на сервер DDelivery.ru ",
-                                "type" => self::FIELD_TYPE_LIST,
-                                "name" => self::PARAM_STATUS_LIST,
-                                "items" => $this->getCmsOrderStatusList(),
-                                "default" => 0,
-                                "data_type" => array("int"),
-                                "required" => 1
-                            )
+            array(
+                "title" => "Способы оплаты, который соответствует наложенному платежу",
+                "type" => self::FIELD_TYPE_LIST,
+                "name" => self::PARAM_PAYMENT_LIST,
+                "items" => $this->getCmsPaymentList(),
+                "default" => 0,
+                "data_type" => array("int"),
+                "required" => 1
+            ),
+            array(
+                "title" => "Статус заказа для отправки на сервер DDelivery.ru ",
+                "type" => self::FIELD_TYPE_LIST,
+                "name" => self::PARAM_STATUS_LIST,
+                "items" => $this->getCmsOrderStatusList(),
+                "default" => 0,
+                "data_type" => array("int"),
+                "required" => 1
+            )
         );
 
         return array_merge($userFields, $requiredFields);
+    }
+
+    public function getRealUrl()
+    {
+        return '';
     }
 } 

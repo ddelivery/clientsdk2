@@ -11,7 +11,8 @@ namespace DDelivery\Server;
 
 use DDelivery\Adapter\Adapter;
 
-class Api {
+class Api
+{
 
     public $apiKey;
 
@@ -22,7 +23,8 @@ class Api {
      */
     public $curlProvider;
 
-    public function __construct($apiKey, $apiServer, $curlProvider){
+    public function __construct($apiKey, $apiServer, $curlProvider)
+    {
         $this->apiKey = $apiKey;
         $this->apiServer = $apiServer;
         $this->curlProvider = $curlProvider;
@@ -32,9 +34,10 @@ class Api {
      * @param $token
      * @return array
      */
-    public function checkHandshakeToken($token){
+    public function checkHandshakeToken($token)
+    {
         $params = array(
-             'token' => $token
+            'token' => $token
         );
         return (array)$this->curlProvider->processGet($this->getUrl('passport', 'handshake'), $params);
     }
@@ -57,9 +60,11 @@ class Api {
      * @param float|int $payment_price_value
      * @return array
      */
-    public function sendOrder( $sdkId, $cmsId, $payment_variant, $status,
-                               $payment_price, $to_name, $to_phone, $to_email,
-                               $comment = '', $payment_price_value = 0 ){
+    public function sendOrder(
+        $sdkId, $cmsId, $payment_variant, $status,
+        $payment_price, $to_name, $to_phone, $to_email,
+        $comment = '', $payment_price_value = 0
+    ) {
         $params = array(
             'id' => $sdkId,
             'shop_refnum' => $cmsId,
@@ -94,9 +99,11 @@ class Api {
      * @param float|int $payment_price_value
      * @return array
      */
-    public function changeOrder( $sdkId, $cmsId, $payment_variant, $status,
-                                 $payment_price, $to_name, $to_phone, $to_email,
-                                 $comment = '', $payment_price_value = 0 ){
+    public function changeOrder(
+        $sdkId, $cmsId, $payment_variant, $status,
+        $payment_price, $to_name, $to_phone, $to_email,
+        $comment = '', $payment_price_value = 0
+    ) {
         $params = array(
             'id' => $sdkId,
             'shop_refnum' => $cmsId,
@@ -114,16 +121,14 @@ class Api {
     }
 
 
-
-
-
     /**
      * Получить информацию о заказе
      *
      * @param $sdkId
      * @return array
      */
-    public function viewOrder($sdkId){
+    public function viewOrder($sdkId)
+    {
         $params = array(
             'id' => $sdkId
         );
@@ -147,9 +152,11 @@ class Api {
      * @param string $comment
      * @return array
      */
-    public function editOrder($sdkId, $cmsId, $payment_variant, $status,
-                              $to_name, $to_phone, $to_email,
-                              $payment_price, $comment = ''){
+    public function editOrder(
+        $sdkId, $cmsId, $payment_variant, $status,
+        $to_name, $to_phone, $to_email,
+        $payment_price, $comment = ''
+    ) {
         $params = array(
             'id' => $sdkId,
             'shop_refnum' => $cmsId,
@@ -163,24 +170,37 @@ class Api {
         return (array)$this->curlProvider->processPost($this->getUrl('order', 'edit'), $params);
     }
 
-    public function accessAdmin($token){
+    /**
+     *
+     * Получить доступ к ПАМ
+     *
+     * @param $token
+     * @param string $realUrl
+     * @return array
+     */
+    public function accessAdmin($token, $realUrl = '')
+    {
         $params = array(
-            'token' => $token
+            'token' => $token,
+            'real_url' => $realUrl
         );
         return (array)$this->curlProvider->processGet($this->getUrl('passport', 'auth'), $params);
     }
 
-    public function pushCart( array $cart ){
+    public function pushCart(array $cart)
+    {
         return (array)$this->curlProvider->processJson($this->getUrl('passport', 'shop'), $cart);
     }
 
-    public function pushOrderEditCart( array $cart, $id ){
+    public function pushOrderEditCart(array $cart, $id)
+    {
         $cart['id'] = $id;
         return (array)$this->curlProvider->processPost($this->getUrl('passport', 'order'), $cart);
     }
 
 
-    public function getUrl( $controller, $method ){
+    public function getUrl($controller, $method)
+    {
         return $this->apiServer . $controller . '/' . $this->apiKey . '/' . $method . '.json';
     }
 } 
