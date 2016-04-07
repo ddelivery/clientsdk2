@@ -1,6 +1,6 @@
 {
     "name": "ddelivery/clientsdk",
-    "description": "SDK for quick creation of client integration",
+    "description": "SDK for quick creation DDelivery client integration",
     "keywords": [
         "ddelivery",
         "sdk"
