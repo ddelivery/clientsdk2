@@ -75,4 +75,11 @@ class LogStorageDB extends DBStorage implements LogStorageInterface  {
         $sth = $this->pdo->prepare( $query );
         return $sth->execute();
     }
+
+    public function drop()
+    {
+        $query = "DROP TABLE " . $this->getTableName();
+        $sth = $this->pdo->prepare( $query );
+        return $sth->execute();
+    }
 }

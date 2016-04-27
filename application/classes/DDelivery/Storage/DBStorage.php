@@ -41,4 +41,8 @@ abstract class DBStorage {
      * @return bool
      */
     abstract public function  createStorage();
+
+    public function  drop(){
+
+    }
 } 

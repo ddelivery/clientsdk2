@@ -130,4 +130,14 @@ class TokenStorageDB extends DBStorage implements TokenStorageInterface {
         $sth->bindParam( ':token', $token );
         return $sth->execute();
     }
+
+
+    public function drop()
+    {
+        $query = "DROP TABLE " . $this->getTableName();
+        $sth = $this->pdo->prepare( $query );
+        return $sth->execute();
+    }
+
+
 }

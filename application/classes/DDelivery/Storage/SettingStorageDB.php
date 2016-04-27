@@ -117,4 +117,11 @@ class SettingStorageDB extends DBStorage implements  SettingStorageInterface {
         }
         return null;
     }
+
+    public function drop()
+    {
+        $query = "DROP TABLE " . $this->getTableName();
+        $sth = $this->pdo->prepare( $query );
+        return $sth->execute();
+    }
 }

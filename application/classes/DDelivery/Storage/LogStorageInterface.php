@@ -31,4 +31,6 @@ interface LogStorageInterface {
 
 
     public function deleteLogs();
+
+    public function drop();
 } 

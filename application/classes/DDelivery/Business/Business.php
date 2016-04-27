@@ -75,6 +75,24 @@ class Business
 
     }
 
+
+    /**
+     * Создать хранилища необходимые для работы модуля
+     */
+    public function deleteStorage()
+    {
+        $tokenStorage = $this->tokenStorage->drop();
+        $settingStorage = $this->settingStorage->drop();
+        $log = $this->log->drop();
+        if ($tokenStorage && $settingStorage && $log) {
+            return true;
+        }
+
+        return false;
+
+    }
+
+
     /**
      * Визивается при окончании оформления заказа
      * для привязки заказа на стороне цмс и на стороне сервера

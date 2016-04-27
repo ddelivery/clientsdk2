@@ -25,4 +25,6 @@ interface TokenStorageInterface {
      * @return array
      */
     public function getAll();
+
+    public function drop();
 }

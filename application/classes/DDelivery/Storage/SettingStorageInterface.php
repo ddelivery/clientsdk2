@@ -16,4 +16,6 @@ interface SettingStorageInterface {
     public function save($settings);
 
     public function getParam($paramName);
+
+    public function drop();
 } 
