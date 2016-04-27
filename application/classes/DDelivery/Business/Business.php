@@ -145,7 +145,7 @@ class Business
                 return $result['data'];
             }
         }
-        return [];
+        return array();
     }
 
     /**

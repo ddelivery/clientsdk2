@@ -102,7 +102,7 @@ class DDeliveryUI
             if (count($orders)) {
                 return $orders;
             }
-            return [];
+            return array();
         }
         throw new DDeliveryException("Ошибка получения списка заказов");
     }
@@ -302,7 +302,7 @@ class DDeliveryUI
         } catch (\Exception $e) {
             $success = 0;
             $data = $e->getMessage();
-            $data = array(['error' => $data]);
+            $data = array(array('error' => $data));
             $this->log->saveLog($e->getMessage());
             echo $e->getMessage();
             exit;

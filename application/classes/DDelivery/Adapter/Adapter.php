@@ -79,7 +79,7 @@ abstract class Adapter
      */
     const USER_FIELD_COMMENT = 'comment';
 
-    public function __construct($params = [])
+    public function __construct($params = array())
     {
         $this->params = $params;
     }
