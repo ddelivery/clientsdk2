@@ -339,7 +339,7 @@ class DDeliveryUI
      */
     public function getTokenMethod()
     {
-        return ['orders', 'push', 'fields', 'save', 'order', 'log', 'version'];
+        return array('orders', 'push', 'fields', 'save', 'order', 'log', 'version');
     }
 
     public function preRender()
